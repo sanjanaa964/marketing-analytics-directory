@@ -311,14 +311,9 @@
       color: white; font-size: 15px; font-weight: 700;
       border: none; border-radius: 12px;
       cursor: pointer; font-family: inherit;
-      letter-spacing: 0.01em;
-      transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 16px rgba(37,99,235,0.35);
+      transition: opacity 0.2s, transform 0.1s;
     }
-    .pw-btn:hover {
-      opacity: 0.92; transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(37,99,235,0.45);
-    }
+    .pw-btn:hover { opacity: 0.92; transform: translateY(-1px); }
     .pw-btn:active { transform: translateY(0); }
 
     .pw-footer-note {
@@ -662,8 +657,8 @@
       transition: background 0.1s;
     }
     .fp-item:hover { background: #F3F4F6; }
-    .fp-item.selected { color: #ffffff; font-weight: 600; }
-    .fp-item.selected::after { content: '✓'; margin-left: auto; }
+    .fp-item.selected { background: #EFF6FF; color: #1D4ED8; font-weight: 600; }
+    .fp-check { margin-left: auto; color: #2563EB; font-weight: 700; }
     .fp-empty { padding: 8px 10px; font-size: 12px; color: #9CA3AF; font-style: italic; }
     .fp-divider { height: 1px; background: #F3F4F6; margin: 4px 0; }
     .fp-create { color: #2563EB; font-weight: 600; }
@@ -1144,6 +1139,23 @@
       color: #374151; padding: 0 8px;
     }
     .sa-freq.high { background: #FEF3C7; color: #92400E; }
+    /* Activity charts */
+    .sa-charts-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px; margin-bottom: 20px;
+    }
+    .sa-chart-card {
+      background: #F9FAFB; border: 1.5px solid #E5E7EB;
+      border-radius: 12px; padding: 16px 18px;
+    }
+    .sa-chart-title {
+      font-size: 12.5px; font-weight: 700; color: #374151;
+      margin-bottom: 4px; letter-spacing: 0.01em;
+    }
+    .sa-chart-subtitle {
+      font-size: 11px; color: #9CA3AF; margin-bottom: 12px;
+    }
+    .sa-no-data { font-size: 12px; color: #9CA3AF; text-align: center; padding: 24px 0; font-style: italic; }
     .sa-no-match-pill {
       background: #FEE2E2; color: #B91C1C; border-radius: 4px;
       padding: 2px 8px; font-size: 11px; font-weight: 700;
@@ -1237,7 +1249,8 @@
       <span class="search-icon">🔍</span>
       <input class="search-input" id="searchInput" type="text"
         placeholder="Search reports..."
-        oninput="handleSearch(this.value)">
+        oninput="handleSearch(this.value)"
+        onblur="if(_pendingSearchVal){clearTimeout(_searchLogTimer);const hits=filteredReports();_logSearch(_pendingSearchVal,'search',hits.map(r=>r.id));_pendingSearchVal='';}">
     </div>
   </div>
 
@@ -1711,6 +1724,7 @@ const AREAS = {
 let activeArea      = 'ALL';
 let searchQuery     = '';
 let pendingUploadId = null;
+let _pendingSearchVal = '';
 
 
 // ─── PLACEHOLDER SVG ─────────────────────────────────────────────────────────
@@ -2001,13 +2015,17 @@ function handleSearch(val) {
     renderFolderList();
   }
   renderSections();
-  // Debounced log — fires 1.5s after user stops typing, min 3 chars
+  // Log search: debounce 400ms so quick clicks still get captured
   clearTimeout(_searchLogTimer);
-  if (val.trim().length >= 3) {
+  _pendingSearchVal = val.trim();
+  if (_pendingSearchVal.length >= 3) {
     _searchLogTimer = setTimeout(() => {
       const hits = filteredReports();
-      _logSearch(val.trim(), 'search', hits.map(r => r.id));
-    }, 1500);
+      _logSearch(_pendingSearchVal, 'search', hits.map(r => r.id));
+      _pendingSearchVal = '';
+    }, 400);
+  } else {
+    _pendingSearchVal = '';
   }
 }
 
@@ -2454,20 +2472,18 @@ function toggleFolderPicker(e, reportId) {
   const folders = loadFolders();
   if (!folders.length) {
     picker.innerHTML = `
-      <div class="fp-empty">No folders yet</div>
-      <div class="fp-divider"></div>
       <div class="fp-item fp-create" onclick="openNewFolderModal()">＋ New folder</div>`;
   } else {
     const items = folders.map(f => {
       const has = f.reports.includes(reportId);
       return `<div class="fp-item ${has ? 'selected' : ''}"
                    onclick="toggleReportInFolder('${reportId}','${f.id}')">
-                📁 ${f.name}
+                📁 ${f.name}${has ? ' <span class="fp-check">✓</span>' : ''}
               </div>`;
     }).join('');
-    picker.innerHTML = items +
-      `<div class="fp-divider"></div>
-       <div class="fp-item fp-create" onclick="openNewFolderModal()">＋ New folder</div>`;
+    picker.innerHTML =
+      `<div class="fp-item fp-create" onclick="openNewFolderModal()">＋ New folder</div>
+       <div class="fp-divider"></div>` + items;
   }
 
   picker.classList.add('open');
@@ -2954,6 +2970,186 @@ function renderAdminTable() {
 }
 
 // ─── SEARCH ANALYTICS PANEL ──────────────────────────────────────────────────
+
+// ── ACTIVITY CHART HELPERS ────────────────────────────────────────────────────
+function _getWeekKey(ts) {
+  const d = new Date(ts);
+  // ISO week: Monday-based
+  const day = d.getDay() || 7;
+  d.setDate(d.getDate() + 4 - day);
+  const yearStart = new Date(d.getFullYear(), 0, 1);
+  const weekNum = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+  return d.getFullYear() + '-W' + String(weekNum).padStart(2, '0');
+}
+
+function _weekLabel(wk) {
+  // wk = '2025-W03' → 'Jan 13'
+  const [yr, wStr] = wk.split('-W');
+  const week = parseInt(wStr);
+  const jan4 = new Date(parseInt(yr), 0, 4);
+  const monday = new Date(jan4);
+  monday.setDate(jan4.getDate() - ((jan4.getDay() || 7) - 1) + (week - 1) * 7);
+  return monday.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function _buildBarChartSVG(weeks, data, color, maxVal) {
+  const W = 300, H = 100, padL = 28, padB = 20, padR = 8, padT = 8;
+  const chartW = W - padL - padR;
+  const chartH = H - padB - padT;
+  const n = weeks.length;
+  if (!n) return '<div class="sa-no-data">No data yet</div>';
+  const barW = Math.max(4, Math.floor(chartW / n) - 3);
+  const gap  = Math.floor(chartW / n);
+  const mx   = maxVal || Math.max(...data, 1);
+
+  let bars = '', labels = '', vals = '';
+  weeks.forEach((wk, i) => {
+    const v = data[i] || 0;
+    const x = padL + i * gap + (gap - barW) / 2;
+    const bh = Math.max(2, Math.round((v / mx) * chartH));
+    const y  = padT + chartH - bh;
+    bars   += `<rect x="${x.toFixed(1)}" y="${y}" width="${barW}" height="${bh}" fill="${color}" rx="3" opacity="0.85"/>`;
+    if (v > 0) vals += `<text x="${(x + barW/2).toFixed(1)}" y="${(y-3).toFixed(1)}" text-anchor="middle" font-size="9" fill="#374151" font-weight="600">${v}</text>`;
+    // Show label every 2nd bar if crowded
+    if (n <= 8 || i % 2 === 0)
+      labels += `<text x="${(x + barW/2).toFixed(1)}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9CA3AF">${_weekLabel(wk)}</text>`;
+  });
+
+  // Y-axis grid lines
+  let grid = '';
+  [0.25, 0.5, 0.75, 1].forEach(frac => {
+    const y = padT + chartH - frac * chartH;
+    const v = Math.round(frac * mx);
+    grid += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#E5E7EB" stroke-width="1"/>`;
+    grid += `<text x="${padL-3}" y="${y+3}" text-anchor="end" font-size="8" fill="#C4C4C4">${v}</text>`;
+  });
+
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible">
+    ${grid}${bars}${vals}${labels}
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT+chartH}" stroke="#E5E7EB" stroke-width="1"/>
+    <line x1="${padL}" y1="${padT+chartH}" x2="${W-padR}" y2="${padT+chartH}" stroke="#E5E7EB" stroke-width="1"/>
+  </svg>`;
+}
+
+function _buildLineChartSVG(weeks, data, color) {
+  const W = 300, H = 100, padL = 32, padB = 20, padR = 8, padT = 8;
+  const chartW = W - padL - padR;
+  const chartH = H - padB - padT;
+  const n = weeks.length;
+  if (!n || Math.max(...data) === 0) return '<div class="sa-no-data">No data yet</div>';
+  const mx = Math.max(...data, 1);
+
+  const pts = data.map((v, i) => {
+    const x = padL + (n === 1 ? chartW/2 : i * chartW / (n-1));
+    const y = padT + chartH - (v / mx) * chartH;
+    return [x, y];
+  });
+
+  const pathD = pts.map((p, i) => (i === 0 ? `M${p[0].toFixed(1)},${p[1].toFixed(1)}` : `L${p[0].toFixed(1)},${p[1].toFixed(1)}`)).join(' ');
+  // Filled area
+  const areaD = pathD + ` L${pts[pts.length-1][0].toFixed(1)},${padT+chartH} L${pts[0][0].toFixed(1)},${padT+chartH} Z`;
+
+  let grid = '';
+  [0.5, 1].forEach(frac => {
+    const y = padT + chartH - frac * chartH;
+    const v = Math.round(frac * mx);
+    grid += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#E5E7EB" stroke-width="1"/>`;
+    grid += `<text x="${padL-3}" y="${y+3}" text-anchor="end" font-size="8" fill="#C4C4C4">${v}</text>`;
+  });
+
+  let labels = '';
+  pts.forEach(([x], i) => {
+    if (n <= 8 || i % 2 === 0)
+      labels += `<text x="${x.toFixed(1)}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9CA3AF">${_weekLabel(weeks[i])}</text>`;
+  });
+
+  let dots = pts.map(([x, y], i) =>
+    `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${color}"/>
+     <title>${weeks[i]}: ${data[i]}</title>`
+  ).join('');
+
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible">
+    <defs>
+      <linearGradient id="lg${color.replace('#','')}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${color}" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="${color}" stop-opacity="0.02"/>
+      </linearGradient>
+    </defs>
+    ${grid}
+    <path d="${areaD}" fill="url(#lg${color.replace('#','')})" />
+    <path d="${pathD}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    ${dots}${labels}
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT+chartH}" stroke="#E5E7EB" stroke-width="1"/>
+    <line x1="${padL}" y1="${padT+chartH}" x2="${W-padR}" y2="${padT+chartH}" stroke="#E5E7EB" stroke-width="1"/>
+  </svg>`;
+}
+
+function _buildActivityCharts(searchLog) {
+  // Get last 8 weeks
+  const now = Date.now();
+  const weeks = [];
+  for (let i = 7; i >= 0; i--) {
+    weeks.push(_getWeekKey(now - i * 7 * 86400000));
+  }
+
+  // Weekly searches
+  const searchByWeek = {};
+  searchLog.forEach(e => {
+    const wk = _getWeekKey(e.ts);
+    if (weeks.includes(wk)) searchByWeek[wk] = (searchByWeek[wk] || 0) + 1;
+  });
+  const searchData = weeks.map(w => searchByWeek[w] || 0);
+
+  // Weekly logins — not tracked without Google auth
+  const loginData = weeks.map(() => 0);
+
+  // All-time cumulative searches (by week, all history)
+  const allWeekSet = new Set(searchLog.map(e => _getWeekKey(e.ts)));
+  const allWeeks = [...allWeekSet].sort();
+  const cumSearchByWeek = {};
+  searchLog.forEach(e => { const wk = _getWeekKey(e.ts); cumSearchByWeek[wk] = (cumSearchByWeek[wk] || 0) + 1; });
+  let running = 0;
+  const cumData = allWeeks.map(w => { running += cumSearchByWeek[w] || 0; return running; });
+
+  // All-time users — not tracked without Google auth
+  const allVisitWeeks = [];
+  const cumUsers = [];
+  const totalUsers = 0;
+
+  const weeklySearchChart  = _buildBarChartSVG(weeks, searchData, '#2563EB');
+  const weeklyLoginChart   = _buildBarChartSVG(weeks, loginData, '#7C3AED');
+  const cumSearchChart     = allWeeks.length ? _buildLineChartSVG(allWeeks, cumData, '#2563EB') : '<div class="sa-no-data">No data yet</div>';
+  const cumUsersChart      = '<div class="sa-no-data">No sign-ins recorded yet</div>';
+
+  return (
+    '<div class="sa-charts-row">' +
+      '<div class="sa-chart-card">' +
+        '<div class="sa-chart-title">📈 Weekly searches</div>' +
+        '<div class="sa-chart-subtitle">Last 8 weeks · chatbot + search bar</div>' +
+        weeklySearchChart +
+      '</div>' +
+      '<div class="sa-chart-card">' +
+        '<div class="sa-chart-title">👥 Weekly logins</div>' +
+        '<div class="sa-chart-subtitle">Last 8 weeks · unique sign-ins</div>' +
+        weeklyLoginChart +
+      '</div>' +
+    '</div>' +
+    '<div class="sa-charts-row">' +
+      '<div class="sa-chart-card">' +
+        '<div class="sa-chart-title">📊 Cumulative searches — all time</div>' +
+        '<div class="sa-chart-subtitle">Running total across all weeks</div>' +
+        cumSearchChart +
+      '</div>' +
+      '<div class="sa-chart-card">' +
+        '<div class="sa-chart-title">🧑‍💻 Total unique users — all time</div>' +
+        '<div class="sa-chart-subtitle">Cumulative unique sign-ins</div>' +
+        cumUsersChart +
+      '</div>' +
+    '</div>'
+  );
+}
+
+
 function renderSearchAnalytics() {
   const log = _getSearchLog();
 
@@ -3057,6 +3253,8 @@ function renderSearchAnalytics() {
           <div class="sa-stat-lbl">No-match rate</div>
         </div>
       </div>
+
+      ${_buildActivityCharts(log)}
 
       ${noMatchRows.filter(r => r.count >= 2).length ? `
       <div style="background:#FFF7F7;border:1.5px solid #FCA5A5;border-radius:10px;padding:12px 16px;margin-bottom:16px">
@@ -3400,6 +3598,14 @@ function checkGatePassword() {
   }
 })();
 
+// Flush any pending search log entry when the page is closed/navigated away
+window.addEventListener('beforeunload', () => {
+  if (_pendingSearchVal && _pendingSearchVal.length >= 3) {
+    clearTimeout(_searchLogTimer);
+    const hits = filteredReports();
+    _logSearch(_pendingSearchVal, 'search', hits.map(r => r.id));
+  }
+});
 </script>
 </body>
 </html>
