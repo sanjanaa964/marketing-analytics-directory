@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Workstream Analytics — Report Directory</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  <title>Hexplorer</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%232563EB'/><rect x='5' y='18' width='4' height='9' rx='1.5' fill='white' opacity='.9'/><rect x='11' y='12' width='4' height='15' rx='1.5' fill='white'/><rect x='17' y='15' width='4' height='12' rx='1.5' fill='white' opacity='.85'/><rect x='23' y='8' width='4' height='19' rx='1.5' fill='white' opacity='.75'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -24,8 +24,8 @@
     .sidebar {
       width: 262px;
       min-width: 262px;
-      background: #ffffff;
-      border-right: 1px solid #E5E7EB;
+      background: linear-gradient(170deg, #1e3a8a 0%, #2563EB 60%, #4f46e5 100%);
+      border-right: none;
       display: flex;
       flex-direction: column;
       height: 100vh;
@@ -36,23 +36,25 @@
     .logo-row {
       padding: 18px 16px 14px;
       display: flex; align-items: center; gap: 10px;
-      border-bottom: 1px solid #F3F4F6;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
       flex-shrink: 0;
     }
     .logo-avatar {
-      width: 34px; height: 34px;
-      border-radius: 8px;
+      width: 36px; height: 36px;
+      border-radius: 9px;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      overflow: hidden;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.12);
+      border: 1px solid rgba(255,255,255,0.5);
     }
-    .logo-name { font-size: 14px; font-weight: 700; color: #111827; line-height: 1.25; }
-    .logo-sub  { font-size: 11.5px; color: #9CA3AF; line-height: 1.2; }
+    .logo-name { font-size: 14px; font-weight: 700; color: #ffffff; line-height: 1.25; }
+    .logo-sub  { font-size: 11.5px; color: rgba(255,255,255,0.65); line-height: 1.2; }
 
     /* Search */
     .search-row {
       padding: 12px 14px;
-      border-bottom: 1px solid #F3F4F6;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
       flex-shrink: 0;
     }
     .search-wrap {
@@ -61,118 +63,109 @@
     .search-icon {
       position: absolute; left: 10px; top: 50%;
       transform: translateY(-50%);
-      color: #9CA3AF; font-size: 13px;
+      color: rgba(255,255,255,0.5); font-size: 13px;
       pointer-events: none;
     }
     .search-input {
       width: 100%;
-      background: #F9FAFB;
-      border: 1px solid #E5E7EB;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
       border-radius: 8px;
       padding: 8px 10px 8px 30px;
-      font-size: 13px; color: #374151;
+      font-size: 13px; color: rgba(255,255,255,0.9);
       outline: none; font-family: inherit;
       transition: border-color 0.15s, background 0.15s;
     }
-    .search-input::placeholder { color: #9CA3AF; }
+    .search-input::placeholder { color: rgba(255,255,255,0.42); }
     .search-input:focus {
-      border-color: #93C5FD;
-      background: white;
+      border-color: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.2);
     }
 
     /* Categories */
     .cat-section {
-      padding: 14px 14px 0;
+      padding: 14px 0 0 14px;
       flex: 1; overflow-y: auto; min-height: 0;
+      overflow-x: hidden;
     }
     .cat-section::-webkit-scrollbar { width: 3px; }
-    .cat-section::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 2px; }
+    .cat-section::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
 
     .section-lbl {
       font-size: 10px; font-weight: 700;
       letter-spacing: 0.09em; text-transform: uppercase;
-      color: #9CA3AF; margin-bottom: 6px; padding: 0 2px;
+      color: rgba(255,255,255,0.55); margin-bottom: 6px; padding: 0 2px;
+    }
+
+    /* Non-clickable total count row above category list */
+    .cat-total-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 2px 10px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      margin-bottom: 8px;
+    }
+    .cat-total-lbl {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.09em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+    .cat-total-cnt {
+      font-size: 11px; font-weight: 700;
+      color: rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.1);
+      padding: 1px 8px; border-radius: 20px;
     }
 
     .cat-item {
       display: flex; align-items: center; gap: 9px;
-      padding: 7px 10px; border-radius: 8px;
-      cursor: pointer; margin-bottom: 1px;
-      transition: background 0.1s;
+      padding: 7px 10px 7px 11px; border-radius: 8px;
+      cursor: pointer; margin-bottom: 3px;
+      transition: background 0.15s, border-left-color 0.15s;
       user-select: none;
+      border-left: 3px solid transparent;
+      text-decoration: none;
     }
-    .cat-item:hover { background: #F9FAFB; }
-    .cat-item.active { background: #EFF6FF; }
+    .cat-item:hover { background: rgba(255,255,255,0.1); }
+
+    /* Active = browser tab: white pill flush to the right edge, connecting into main content */
+    .cat-item.active {
+      background: #ffffff;
+      border-left-color: var(--cat-clr, #2563EB);
+      border-radius: 8px 0 0 8px;
+      margin-right: -14px;
+      padding-right: 24px;
+      box-shadow: 3px 0 10px rgba(0,0,0,0.08);
+      position: relative;
+      z-index: 1;
+    }
 
     .cat-dot {
-      width: 8px; height: 8px; border-radius: 50%;
+      width: 10px; height: 10px; border-radius: 50%;
       flex-shrink: 0;
+      opacity: 0.65;
+      transition: opacity 0.15s;
     }
+    .cat-item:hover .cat-dot { opacity: 0.9; }
+    .cat-item.active .cat-dot { opacity: 1; }
+
     .cat-name {
-      font-size: 13px; color: #374151;
+      font-size: 13px; color: rgba(255,255,255,0.82);
       flex: 1; font-weight: 500;
+      text-decoration: none;
     }
-    .cat-item.active .cat-name { color: #2563EB; font-weight: 600; }
+    .cat-item.active .cat-name { color: #1e3a8a; font-weight: 700; text-decoration: none; }
 
     .cat-cnt {
-      font-size: 11.5px; color: #9CA3AF;
-      background: #F3F4F6; border-radius: 20px;
+      font-size: 11.5px; color: rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.12); border-radius: 20px;
       padding: 1px 8px; font-weight: 600;
       min-width: 24px; text-align: center;
     }
     .cat-item.active .cat-cnt {
-      background: #DBEAFE; color: #2563EB;
+      background: #EFF6FF; color: #2563EB;
     }
 
-    /* Quick Find */
-    .quickfind {
-      padding: 12px 14px;
-      border-top: 1px solid #F3F4F6;
-      flex-shrink: 0;
-    }
-    .quickfind-lbl {
-      font-size: 10px; font-weight: 700;
-      letter-spacing: 0.09em; text-transform: uppercase;
-      color: #9CA3AF; margin-bottom: 7px;
-    }
-    .quickfind-input {
-      width: 100%;
-      background: #F9FAFB;
-      border: 1px solid #E5E7EB;
-      border-radius: 8px;
-      padding: 8px 10px;
-      font-size: 13px; color: #374151;
-      outline: none; font-family: inherit;
-      transition: border-color 0.15s;
-    }
-    .quickfind-input::placeholder { color: #9CA3AF; }
-    .quickfind-input:focus { border-color: #93C5FD; background: white; }
 
-    /* Quick Find results */
-    .qf-result {
-      margin-top: 8px;
-      background: #F0F9FF;
-      border: 1px solid #BAE6FD;
-      border-radius: 8px;
-      padding: 10px 11px;
-      font-size: 12px;
-      color: #0369A1;
-      line-height: 1.5;
-    }
-    .qf-result a {
-      display: block;
-      font-weight: 700;
-      color: #0284C7;
-      text-decoration: none;
-      margin-top: 4px;
-      font-size: 12.5px;
-    }
-    .qf-result a:hover { text-decoration: underline; }
-    .qf-result-tag {
-      font-size: 9.5px; font-weight: 700;
-      letter-spacing: 0.05em; text-transform: uppercase;
-      opacity: 0.7; margin-bottom: 2px;
-    }
 
     /* ─── MAIN ───────────────────────────────────────────────── */
     .main {
@@ -183,8 +176,156 @@
     .main::-webkit-scrollbar-track { background: #F4F4F8; }
     .main::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
 
+    /* ─── HERO BANNER ─────────────────────────────────── */
+    .hero-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563EB 55%, #4f46e5 100%);
+      border-radius: 16px;
+      padding: 40px 32px 34px;
+      margin-bottom: 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hero-label {
+      font-size: 10.5px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 12px;
+    }
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 46px; font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin: 0 0 10px;
+    }
+    .hero-subtitle {
+      font-size: 14px; font-weight: 400;
+      color: rgba(255,255,255,0.6);
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+
     .page-title { font-size: 22px; font-weight: 800; color: #111827; }
-    .page-sub   { font-size: 13px; color: #6B7280; margin-top: 3px; margin-bottom: 24px; }
+    .page-title-sub { font-size: 13px; font-weight: 500; color: #9CA3AF; margin-top: 2px; }
+    .page-sub   { font-size: 13px; color: #6B7280; margin-top: 8px; margin-bottom: 24px; }
+
+    /* ─── PASSWORD GATE ──────────────────────────────── */
+    .pw-gate {
+      position: fixed; inset: 0; z-index: 9999;
+      background: linear-gradient(145deg, #0f2166 0%, #1e3a8a 30%, #2563EB 65%, #4f46e5 100%);
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.4s ease;
+    }
+    .pw-gate.hidden { opacity: 0; pointer-events: none; }
+
+    .pw-card {
+      width: 440px;
+      background: rgba(255,255,255,0.97);
+      border-radius: 24px;
+      padding: 52px 48px 44px;
+      box-shadow: 0 32px 100px rgba(0,0,0,0.28), 0 4px 20px rgba(0,0,0,0.12);
+      text-align: center;
+      position: relative;
+    }
+
+    /* Hexagon logo in card */
+    .pw-hex {
+      width: 64px; height: 64px;
+      background: linear-gradient(150deg, #3b82f6 0%, #2563EB 45%, #1e3a8a 100%);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      box-shadow:
+        0 16px 40px rgba(37,99,235,0.45),
+        0 4px 12px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.28),
+        inset 0 -1px 0 rgba(0,0,0,0.12);
+      position: relative;
+    }
+    .pw-hex svg { width: 36px; height: 36px; }
+
+    .pw-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px; font-weight: 800;
+      color: #111827; letter-spacing: -0.02em;
+      margin: 0 0 4px;
+    }
+    .pw-tagline {
+      font-size: 13px; color: #9CA3AF;
+      letter-spacing: 0.02em;
+      margin: 0 0 24px;
+    }
+
+    .pw-divider {
+      width: 40px; height: 3px;
+      background: linear-gradient(90deg, #2563EB, #4f46e5);
+      border-radius: 2px;
+      margin: 0 auto 24px;
+    }
+
+    .pw-welcome {
+      font-size: 14.5px; color: #374151;
+      line-height: 1.6; margin: 0 0 28px;
+    }
+
+    .pw-input-wrap { position: relative; margin-bottom: 12px; }
+    .pw-input {
+      width: 100%; padding: 14px 18px;
+      border: 2px solid #E5E7EB;
+      border-radius: 12px;
+      font-size: 15px; font-family: inherit;
+      color: #111827; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.05em;
+      box-sizing: border-box;
+    }
+    .pw-input:focus {
+      border-color: #2563EB;
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
+    }
+    .pw-input.pw-error {
+      border-color: #EF4444;
+      box-shadow: 0 0 0 4px rgba(239,68,68,0.1);
+      animation: pw-shake 0.4s ease;
+    }
+    @keyframes pw-shake {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-8px); }
+      40%      { transform: translateX(8px); }
+      60%      { transform: translateX(-5px); }
+      80%      { transform: translateX(5px); }
+    }
+
+    .pw-error-msg {
+      font-size: 12.5px; color: #EF4444;
+      margin: -6px 0 10px; text-align: left;
+      padding-left: 2px; min-height: 18px;
+    }
+
+    .pw-btn {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, #1e3a8a, #2563EB);
+      color: white; font-size: 15px; font-weight: 700;
+      border: none; border-radius: 12px;
+      cursor: pointer; font-family: inherit;
+      letter-spacing: 0.01em;
+      transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(37,99,235,0.35);
+    }
+    .pw-btn:hover {
+      opacity: 0.92; transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(37,99,235,0.45);
+    }
+    .pw-btn:active { transform: translateY(0); }
+
+    .pw-footer-note {
+      margin-top: 24px;
+      font-size: 11.5px; color: #D1D5DB;
+      letter-spacing: 0.02em;
+    }
 
     /* Area section */
     .area-section { margin-bottom: 30px; }
@@ -218,9 +359,11 @@
       display: flex; flex-direction: column;
     }
     .report-card:hover {
-      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(37,99,235,0.14), 0 2px 8px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
+      border-color: #BFDBFE;
     }
+    .report-card { cursor: pointer; }
 
     /* ─── IMAGE AREA ─────────────────────────────────────────── */
     .card-img-zone {
@@ -289,9 +432,9 @@
       outline-offset: -3px;
     }
 
-    /* Card footer */
+    /* Card footer — info only, no longer a link */
     .card-footer {
-      padding: 15px 18px 17px;
+      padding: 15px 18px 10px;
       display: flex; align-items: flex-start;
       justify-content: space-between; gap: 12px;
     }
@@ -318,13 +461,133 @@
       white-space: nowrap; flex-shrink: 0; margin-top: 2px;
     }
 
+    /* Action bar — sits below footer info */
+    .card-actions {
+      padding: 0 14px 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* Open report — now a proper anchor in action bar */
+    .card-open-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 7px 14px;
+      background: #EFF6FF;
+      color: #2563EB;
+      border: 1.5px solid #BFDBFE;
+      border-radius: 20px;
+      font-size: 12px; font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .card-open-btn:hover {
+      background: #2563EB;
+      color: white;
+      border-color: #2563EB;
+    }
+    .card-open-btn svg { width: 11px; height: 11px; flex-shrink: 0; }
+
+    /* Add to folder — always visible button */
+    .card-folder-action {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 13px;
+      background: transparent;
+      color: #6B7280;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 20px;
+      font-size: 12px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .card-folder-action:hover {
+      background: #F9FAFB;
+      border-color: #D1D5DB;
+      color: #374151;
+    }
+    .card-folder-action.in-folder {
+      background: #EFF6FF;
+      border-color: #BFDBFE;
+      color: #2563EB;
+    }
+
+    /* ── Expandable card detail panel ───────────────────────────── */
+    .card-see-more {
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      width: 100%; padding: 8px 14px 10px;
+      background: none; border: none; border-top: 1px solid #F3F4F6;
+      font-size: 11.5px; font-weight: 700; color: #9CA3AF;
+      cursor: pointer; font-family: inherit;
+      transition: color 0.12s, background 0.12s;
+      border-radius: 0 0 12px 12px;
+    }
+    .card-see-more:hover { background: #F9FAFB; color: #2563EB; }
+    .card-see-more.open { color: #2563EB; background: #F0F7FF; border-top-color: #DBEAFE; }
+
+    .card-detail {
+      display: none;
+      padding: 0 16px 14px;
+      border-top: 1px solid #F0F7FF;
+      animation: fadeSlideIn 0.18s ease;
+    }
+    .card-detail.open { display: block; }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .cd-section { margin-bottom: 12px; }
+    .cd-section:last-child { margin-bottom: 0; }
+    .cd-label {
+      font-size: 9.5px; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #9CA3AF; margin-bottom: 5px;
+    }
+    .cd-questions {
+      margin: 0; padding: 0; list-style: none;
+    }
+    .cd-questions li {
+      font-size: 12.5px; color: #374151; line-height: 1.4;
+      padding: 3px 0 3px 14px; position: relative;
+    }
+    .cd-questions li::before {
+      content: '→'; position: absolute; left: 0;
+      color: #93C5FD; font-size: 11px; top: 4px;
+    }
+    .cd-chips {
+      display: flex; flex-wrap: wrap; gap: 4px;
+    }
+    .cd-chip {
+      background: #F3F4F6; color: #374151;
+      border-radius: 5px; padding: 3px 9px;
+      font-size: 11px; font-weight: 600;
+    }
+    .cd-chart-chip { background: #EDE9FE; color: #7C3AED; }
+    .cd-two-col {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .cd-meta-val {
+      font-size: 12px; color: #374151; line-height: 1.5;
+    }
+    .cd-divider {
+      height: 1px; background: #F3F4F6; margin: 10px 0;
+    }
+    .cd-best-for {
+      font-size: 12px; color: #374151;
+      background: #F0FDF4; border-left: 3px solid #22C55E;
+      padding: 7px 10px; border-radius: 0 6px 6px 0;
+      line-height: 1.45;
+    }
+
+
     /* Hidden file input */
     .file-input { display: none; }
 
     /* ─── FOLDERS ─────────────────────────────────────────── */
     .folder-section {
       padding: 14px 12px 10px;
-      border-top: 1px solid #F3F4F6;
+      border-top: 1px solid rgba(255,255,255,0.15);
       flex-shrink: 0;
     }
     .folder-header {
@@ -333,35 +596,35 @@
     }
     .folder-new-btn {
       width: 22px; height: 22px;
-      background: none; border: 1.5px solid #E5E7EB;
+      background: none; border: 1.5px solid rgba(255,255,255,0.25);
       border-radius: 6px; font-size: 14px; line-height: 1;
-      cursor: pointer; color: #6B7280; display: flex;
+      cursor: pointer; color: rgba(255,255,255,0.65); display: flex;
       align-items: center; justify-content: center;
       transition: background 0.12s, border-color 0.12s;
     }
-    .folder-new-btn:hover { background: #F3F4F6; border-color: #D1D5DB; }
+    .folder-new-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.4); }
 
     .folder-item {
       display: flex; align-items: center; gap: 6px;
       padding: 6px 8px; border-radius: 7px;
-      cursor: pointer; font-size: 13px; color: #374151;
+      cursor: pointer; font-size: 13px; color: rgba(255,255,255,0.82);
       transition: background 0.1s;
       user-select: none;
     }
-    .folder-item:hover { background: #F9FAFB; }
-    .folder-item.active { background: #EFF6FF; color: #2563EB; font-weight: 600; }
+    .folder-item:hover { background: rgba(255,255,255,0.1); }
+    .folder-item.active { background: rgba(255,255,255,0.22); color: #ffffff; font-weight: 600; }
     .folder-icon { font-size: 14px; flex-shrink: 0; }
     .folder-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .folder-count {
       font-size: 10.5px; font-weight: 600;
-      color: #9CA3AF; background: #F3F4F6;
+      color: rgba(255,255,255,0.55); background: rgba(255,255,255,0.12);
       padding: 1px 6px; border-radius: 10px;
       flex-shrink: 0;
     }
-    .folder-item.active .folder-count { background: #DBEAFE; color: #2563EB; }
+    .folder-item.active .folder-count { background: rgba(255,255,255,0.35); color: #ffffff; }
     .folder-del-btn {
       display: none; background: none; border: none;
-      color: #D1D5DB; font-size: 14px; cursor: pointer;
+      color: rgba(255,255,255,0.35); font-size: 14px; cursor: pointer;
       padding: 0 2px; line-height: 1; flex-shrink: 0;
     }
     .folder-del-btn:hover { color: #EF4444; }
@@ -385,7 +648,7 @@
 
     /* Folder picker dropdown */
     .folder-picker {
-      position: absolute; bottom: 44px; left: 10px;
+      position: absolute; bottom: 38px; left: 0;
       background: white; border: 1.5px solid #E5E7EB;
       border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
       padding: 6px; min-width: 180px; z-index: 20;
@@ -399,11 +662,12 @@
       transition: background 0.1s;
     }
     .fp-item:hover { background: #F3F4F6; }
-    .fp-item.selected { color: #2563EB; font-weight: 600; }
+    .fp-item.selected { color: #ffffff; font-weight: 600; }
     .fp-item.selected::after { content: '✓'; margin-left: auto; }
     .fp-empty { padding: 8px 10px; font-size: 12px; color: #9CA3AF; font-style: italic; }
     .fp-divider { height: 1px; background: #F3F4F6; margin: 4px 0; }
     .fp-create { color: #2563EB; font-weight: 600; }
+    .fp-create:hover { background: #EFF6FF; }
 
     /* Folder modal overlay */
     .folder-modal-bg {
@@ -562,7 +826,7 @@
       border-radius: 14px;
     }
     .cb-bot  {
-      background: #F3F4F6; color: #1F2937;
+      background: rgba(255,255,255,0.12); color: #1F2937;
       border-bottom-left-radius: 4px;
     }
     .cb-user {
@@ -796,6 +1060,113 @@
     .admin-field input:focus, .admin-field textarea:focus, .admin-field select:focus { border-color: #7C3AED; }
     .admin-field textarea { min-height: 72px; resize: vertical; }
     .admin-field-hint { font-size: 11px; color: #9CA3AF; margin-top: 4px; }
+
+    /* Screenshot drop zone inside admin modal */
+    .am-img-zone {
+      border: 2px dashed #E5E7EB;
+      border-radius: 10px; min-height: 96px;
+      cursor: pointer; position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; background: #FAFAFA;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .am-img-zone:hover, .am-img-zone.am-drag-over {
+      border-color: #7C3AED; background: #F5F3FF;
+    }
+    .am-img-placeholder {
+      font-size: 13px; color: #9CA3AF; text-align: center; padding: 18px;
+      pointer-events: none; line-height: 1.6;
+    }
+    .am-img-preview {
+      width: 100%; height: 130px; object-fit: cover;
+      border-radius: 8px; display: block;
+    }
+    .am-img-remove {
+      position: absolute; top: 8px; right: 8px;
+      background: rgba(0,0,0,0.55); color: white;
+      border: none; border-radius: 6px;
+      font-size: 11px; padding: 3px 9px; cursor: pointer;
+      font-family: inherit; font-weight: 600;
+    }
+    .am-img-remove:hover { background: rgba(220,38,38,0.85); }
+
+    /* ── Search Analytics admin panel ─────────────────────────── */
+    .sa-summary {
+      display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap;
+    }
+    .sa-stat {
+      background: #F9FAFB; border: 1.5px solid #E5E7EB;
+      border-radius: 10px; padding: 12px 18px; flex: 1; min-width: 120px;
+    }
+    .sa-stat-num { font-size: 22px; font-weight: 800; color: #111827; line-height: 1.1; }
+    .sa-stat-lbl { font-size: 11px; color: #9CA3AF; font-weight: 600;
+                   text-transform: uppercase; letter-spacing: 0.07em; margin-top: 3px; }
+    .sa-stat.warn .sa-stat-num { color: #DC2626; }
+    .sa-tabs {
+      display: flex; gap: 4px; margin-bottom: 14px;
+      border-bottom: 2px solid #F3F4F6; padding-bottom: 0;
+    }
+    .sa-tab {
+      padding: 7px 16px; font-size: 12.5px; font-weight: 600;
+      color: #6B7280; cursor: pointer; border-bottom: 2px solid transparent;
+      margin-bottom: -2px; border-radius: 6px 6px 0 0;
+      transition: color 0.12s, border-color 0.12s;
+      background: none; border-left: none; border-right: none; border-top: none;
+      font-family: inherit;
+    }
+    .sa-tab:hover { color: #374151; }
+    .sa-tab.active { color: #2563EB; border-bottom-color: #2563EB; }
+    .sa-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .sa-table th {
+      text-align: left; padding: 8px 12px;
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em;
+      text-transform: uppercase; color: #9CA3AF;
+      border-bottom: 2px solid #F3F4F6; background: #FAFAFA;
+    }
+    .sa-table td { padding: 9px 12px; border-bottom: 1px solid #F3F4F6; vertical-align: middle; }
+    .sa-table tr:hover td { background: #F9FAFB; }
+    .sa-row-nomatch td { background: #FFF7F7; }
+    .sa-row-nomatch:hover td { background: #FEF2F2; }
+    .sa-badge-chat {
+      display: inline-flex; align-items: center; gap: 3px;
+      background: #EDE9FE; color: #7C3AED; border-radius: 4px;
+      padding: 2px 7px; font-size: 10.5px; font-weight: 700;
+    }
+    .sa-badge-search {
+      display: inline-flex; align-items: center; gap: 3px;
+      background: #DBEAFE; color: #2563EB; border-radius: 4px;
+      padding: 2px 7px; font-size: 10.5px; font-weight: 700;
+    }
+    .sa-freq {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #F3F4F6; border-radius: 20px;
+      min-width: 26px; height: 22px; font-size: 12px; font-weight: 700;
+      color: #374151; padding: 0 8px;
+    }
+    .sa-freq.high { background: #FEF3C7; color: #92400E; }
+    .sa-no-match-pill {
+      background: #FEE2E2; color: #B91C1C; border-radius: 4px;
+      padding: 2px 8px; font-size: 11px; font-weight: 700;
+    }
+    .sa-empty { text-align: center; padding: 40px; color: #9CA3AF; font-size: 14px; }
+    .sa-clear-btn {
+      font-size: 11px; color: #9CA3AF; background: none; border: 1px solid #E5E7EB;
+      border-radius: 6px; padding: 4px 10px; cursor: pointer; font-family: inherit;
+    }
+    .sa-clear-btn:hover { color: #DC2626; border-color: #FCA5A5; }
+
+
+    /* Toast notification */
+    .ws-toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(12px);
+      background: #111827; color: white;
+      padding: 10px 20px; border-radius: 20px;
+      font-size: 13px; font-weight: 600;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 9999; white-space: nowrap;
+    }
+    .ws-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     .admin-modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; border-top: 1px solid #F3F4F6; padding-top: 18px; }
     .admin-modal-cancel { background: #F3F4F6; color: #374151; border: none; border-radius: 8px; padding: 9px 18px; font-size: 13px; cursor: pointer; font-family:inherit; }
     .admin-modal-save { background: #7C3AED; color: white; border: none; border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family:inherit; }
@@ -804,13 +1175,60 @@
 </head>
 <body>
 
+<!-- ═══════════════════ PASSWORD GATE ══════════════ -->
+<div class="pw-gate" id="pwGate">
+  <div class="pw-card">
+
+    <!-- Logo -->
+    <div class="pw-hex">
+      <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer hex filled, soft -->
+        <path d="M18 3L32 11V25L18 33L4 25V11L18 3Z" fill="white" fill-opacity="0.15"/>
+        <!-- Outer hex stroke -->
+        <path d="M18 3L32 11V25L18 33L4 25V11L18 3Z" stroke="white" stroke-opacity="0.9" stroke-width="1.8"/>
+        <!-- Inner hex filled -->
+        <path d="M18 10L26 14.8V23.2L18 28L10 23.2V14.8L18 10Z" fill="white" fill-opacity="0.9"/>
+        <!-- Center cutout dot -->
+        <circle cx="18" cy="18" r="4" fill="#2563EB"/>
+        <circle cx="18" cy="18" r="2" fill="white" fill-opacity="0.9"/>
+      </svg>
+    </div>
+
+    <h1 class="pw-title">Hexplorer</h1>
+    <p class="pw-tagline">Marketing Analytics Directory</p>
+    <div class="pw-divider"></div>
+
+    <p class="pw-welcome">
+      Welcome to the Workstream marketing analytics hub. This directory contains internal reports and data. Enter the team password to continue.
+    </p>
+
+    <div class="pw-input-wrap">
+      <input class="pw-input" id="gateInput" type="password"
+        placeholder="Team password"
+        onkeydown="if(event.key==='Enter') checkGatePassword()">
+    </div>
+    <div class="pw-error-msg" id="gateError"></div>
+
+    <button class="pw-btn" onclick="checkGatePassword()">Enter Hexplorer</button>
+
+    <p class="pw-footer-note">Workstream · Internal use only</p>
+  </div>
+</div>
+
 <!-- ═══════════════════ SIDEBAR ════════════════════ -->
 <aside class="sidebar">
 
   <div class="logo-row">
+    <div class="logo-avatar">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11 1L20 6.2V15.8L11 21L2 15.8V6.2L11 1Z" fill="#2563EB"/>
+        <path d="M11 5.5L16.5 8.8V15.2L11 18.5L5.5 15.2V8.8L11 5.5Z" fill="#1e3a8a"/>
+        <circle cx="11" cy="11" r="2.8" fill="white"/>
+      </svg>
+    </div>
     <div>
-      <div class="logo-name">Workstream</div>
-      <div class="logo-sub">Analytics · Sanjanaa</div>
+      <div class="logo-name">Hexplorer</div>
+      <div class="logo-sub">by Sanjanaa</div>
     </div>
   </div>
 
@@ -826,14 +1244,6 @@
   <div class="cat-section">
     <div class="section-lbl">Categories</div>
     <div id="catList"></div>
-  </div>
-
-  <div class="quickfind">
-    <div class="quickfind-lbl">Quick Find</div>
-    <input class="quickfind-input" id="qfInput" type="text"
-      placeholder="Describe what you need..."
-      onkeydown="if(event.key==='Enter') runQuickFind()">
-    <div id="qfResult"></div>
   </div>
 
   <!-- ── FOLDERS ── -->
@@ -854,7 +1264,7 @@
 
   <!-- ── SIDEBAR BOTTOM ── -->
   <div class="sidebar-bottom">
-    <span id="adminModeLabel" style="font-size:11px;color:#7C3AED;font-weight:600;display:none">Admin mode</span>
+    <span id="adminModeLabel" style="font-size:11px;color:rgba(255,255,255,0.9);font-weight:600;display:none">Admin mode</span>
     <button class="lock-btn" id="lockBtn" onclick="handleLockClick()" title="Admin access">🔒</button>
   </div>
 
@@ -862,8 +1272,13 @@
 
 <!-- ═══════════════════ MAIN ════════════════════════ -->
 <main class="main">
-  <div class="page-title">Marketing Reports Directory</div>
-  <div class="page-sub" id="pageSubtitle">24 reports available</div>
+  <!-- ── HERO BANNER ── -->
+  <div class="hero-banner">
+    <div class="hero-label">Workstream Marketing</div>
+    <h1 class="hero-title">Hexplorer</h1>
+    <p class="hero-subtitle">Marketing Analytics Directory</p>
+  </div>
+  <div class="page-sub" id="pageSubtitle">22 reports available</div>
 
   <div id="sectionsRoot"></div>
   <div id="noResults" class="no-results" style="display:none">
@@ -952,6 +1367,22 @@
       <div class="admin-field-hint">Tags help the chatbot and search find this report</div>
     </div>
 
+    <div class="admin-field">
+      <label>Screenshot <span style="font-weight:400;text-transform:none;color:#9CA3AF">(optional)</span></label>
+      <div class="am-img-zone" id="amImgZone"
+           onclick="document.getElementById('amImgInput').click()"
+           ondragover="event.preventDefault();this.classList.add('am-drag-over')"
+           ondragleave="this.classList.remove('am-drag-over')"
+           ondrop="event.preventDefault();this.classList.remove('am-drag-over');amImgDrop(event)">
+        <div class="am-img-placeholder" id="amImgPlaceholder">📷 Drop a screenshot here or click to upload</div>
+        <img id="amImgPreview" class="am-img-preview" style="display:none" alt="preview">
+        <button class="am-img-remove" id="amImgRemove" style="display:none"
+                onclick="event.stopPropagation();amClearImg()">✕ Remove</button>
+      </div>
+      <input type="file" id="amImgInput" accept="image/*" style="display:none"
+             onchange="amImgFileChange(this)">
+    </div>
+
     <div class="admin-modal-actions">
       <button class="admin-modal-cancel" onclick="closeAdminModal()">Cancel</button>
       <button class="admin-modal-save" onclick="saveAdminForm()">Save Report</button>
@@ -970,11 +1401,13 @@
 </button>
 
 <!-- Popup -->
+<div class="ws-toast" id="wsToast"></div>
+
 <div class="chatbot-popup" id="chatbotPopup">
   <div class="chatbot-header">
     <div class="chatbot-avatar">🔍</div>
     <div>
-      <div class="chatbot-hname">Report Finder</div>
+      <div class="chatbot-hname">Hexplorer Assistant</div>
       <div class="chatbot-hstatus"><span class="status-dot"></span> Ready to help</div>
     </div>
     <button class="chatbot-close" onclick="toggleChatbot()">×</button>
@@ -1147,7 +1580,7 @@ const BASE_REPORTS = [
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/hex/SRC-Cross-Channel-KPI-Summary-Pipeline-Cost-ROI-by-Channel-How-is-marketing-performing-032wBXNeSdn1nGo4PAMc06/draft/logic',
     popular:false, attrType:'first',
     filters:'None (static 2025)',
-    tags:['cost','scorecard','2025','annual','mql','spend','cost per mql','channel','roi','annual scorecard'],
+    tags:['cost','scorecard','2025','annual','mql','spend','cost per mql','channel','roi','annual scorecard','year over year','yoy','yearly','growth','trend','historical','annual comparison'],
   },
 
   // ── AUDIENCE ──────────────────────────────────────────────────────────
@@ -1274,47 +1707,17 @@ const AREAS = {
   MODEL:    { color:'#F97316', light:'#FFF7ED', badge:'#FFEDD5', badgeTxt:'#C2410C', dot:'#F97316', label:'Model',    desc:'Forecasting & projections' },
 };
 
-
-// ─── QUICK FIND ROUTES ───────────────────────────────────────────────────────
-const ROUTES = [
-  { kw:['roi','return on investment','pipe per dollar','best channel','worst channel','all channel cost'], id:'r10' },
-  { kw:['on track','kr target','h1 target','okr','goal','progress vs target'],                            id:'r15' },
-  { kw:['how are we doing','summary','biweekly','weekly summary','overview'],                             id:'r01' },
-  { kw:['28 day','last 28','rolling kpi','last month'],                                                   id:'r14' },
-  { kw:['how many mql','mql count','mql this week','mql volume'],                                        id:'r05' },
-  { kw:['which event','which webinar','which campaign drove','event pipeline','campaign entity'],          id:'r09' },
-  { kw:['form fill','demo request','inbound lead'],                                                       id:'r08' },
-  { kw:['win rate','pipe to won','close rate'],                                                           id:'r17' },
-  { kw:['how long','duration','velocity','days to convert'],                                              id:'r12' },
-  { kw:['mql cohort','mql conversion rate','cohort conversion'],                                          id:'r04' },
-  { kw:['single channel','one channel','deep dive'],                                                      id:'r02' },
-  { kw:['gtm owner','gtm role','marketing owned','by tactic'],                                            id:'r07' },
-  { kw:['by product','hiring pipeline','payroll pipe','product revenue'],                                 id:'r13' },
-  { kw:['nps','advocate','happy customer','referral outreach'],                                           id:'r11' },
-  { kw:['arr forecast','projected arr','eoy arr','spend sensitivity','what if'],                          id:'r21' },
-  { kw:['payroll referral','aio referral','referral rock'],                                               id:'r18' },
-  { kw:['t&s adoption','chat adoption','product adoption'],                                               id:'r20' },
-  { kw:['link click','click tracker'],                                                                    id:'r06' },
-  { kw:['annual scorecard','2025 scorecard','scorecard'],                                                 id:'r03' },
-  { kw:['by source','pipe by source','won by source','source breakdown','src pipe','pipeline source'],     id:'r24' },
-  { kw:['mql touchpoints','touchpoints by campaign','campaign touches','mql date touches'],                id:'r25' },
-  { kw:['fy26 target','arr target','revenue target','ending arr','franchise sales arr','cfa arr','pa inbound arr','net new arr','arr by segment'], id:'r26' },
-];
-
-
 // ─── STATE ───────────────────────────────────────────────────────────────────
-let activeArea  = 'ALL';
-let searchQuery = '';
-let pendingUploadId = null; // which report we're uploading for
+let activeArea      = 'ALL';
+let searchQuery     = '';
+let pendingUploadId = null;
 
 
 // ─── PLACEHOLDER SVG ─────────────────────────────────────────────────────────
-// Generates a soft chart-style placeholder in the area's light color
 function placeholderSVG(areaKey) {
   const a = AREAS[areaKey] || { color:'#94A3B8', light:'#F8FAFC' };
   const col  = a.color;
   const bg   = a.light;
-  // subtle bar heights — varied pattern
   const bars = [38,62,48,78,55,90,42,70,58,85,50,66,44,80,60];
   const barW = 10, gap = 4, startX = 28, baseY = 118;
 
@@ -1324,12 +1727,10 @@ function placeholderSVG(areaKey) {
     return `<rect x="${x}" y="${baseY-h}" width="${barW}" height="${h}" rx="2" fill="${col}" opacity="${opacity}"/>`;
   }).join('');
 
-  // Faint lines (table rows)
   const lines = [138,148,158,168].map(y =>
     `<rect x="24" y="${y}" width="220" height="5" rx="2" fill="${col}" opacity="0.08"/>`
   ).join('');
 
-  // Circle chart element (top right)
   const circSVG = `
     <circle cx="340" cy="54" r="36" fill="none" stroke="${col}" stroke-width="14" stroke-dasharray="180 226" opacity="0.13"/>
     <circle cx="340" cy="54" r="36" fill="none" stroke="${col}" stroke-width="14" stroke-dasharray="80 226" stroke-dashoffset="-180" opacity="0.09"/>
@@ -1362,7 +1763,6 @@ function removeImage(id) {
   localStorage.removeItem(imgKey(id));
 }
 
-// Resize + compress before storing
 function processFile(file, callback) {
   const reader = new FileReader();
   reader.onload = e => {
@@ -1389,17 +1789,18 @@ function renderCatList() {
   const allCount = REPORTS.length;
 
   const allItem = `
-    <div class="cat-item ${activeArea==='ALL'?'active':''}" onclick="setArea('ALL')">
-      <div class="cat-dot" style="background:#9CA3AF"></div>
-      <span class="cat-name">All Reports</span>
-      <span class="cat-cnt">${allCount}</span>
+    <div class="cat-total-row">
+      <span class="cat-total-lbl">Total Reports</span>
+      <span class="cat-total-cnt">${allCount}</span>
     </div>`;
 
   const areaItems = Object.entries(AREAS).map(([key, a]) => {
     const cnt = REPORTS.filter(r => r.area === key).length;
     const isActive = activeArea === key;
     return `
-      <div class="cat-item ${isActive?'active':''}" onclick="setArea('${key}')">
+      <div class="cat-item ${isActive?'active':''}"
+           style="--cat-clr:${a.dot}"
+           onclick="setArea('${key}')">
         <div class="cat-dot" style="background:${a.dot}"></div>
         <span class="cat-name">${a.label}</span>
         <span class="cat-cnt">${cnt}</span>
@@ -1416,6 +1817,8 @@ function cardHTML(r) {
   const storedImg = loadImage(r.id);
   const imgSrc = storedImg || placeholderSVG(r.area);
   const hasReal = !!storedImg;
+  const inFolder = cardInAnyFolder(r.id);
+  const detail   = REPORT_DETAILS[r.id] || null;
 
   return `
     <div class="report-card" id="card-${r.id}">
@@ -1431,45 +1834,93 @@ function cardHTML(r) {
             <circle cx="12" cy="13" r="4"/>
           </svg>
         </button>
-        <button class="card-folder-btn ${cardInAnyFolder(r.id) ? 'in-folder' : ''}"
-                id="fb-${r.id}"
-                title="Add to folder"
-                onclick="toggleFolderPicker(event,'${r.id}')">🗂</button>
-        <div class="folder-picker" id="fp-${r.id}"></div>
         ${hasReal ? `<button class="remove-btn" title="Remove screenshot" onclick="doRemove(event,'${r.id}')">✕</button>` : ''}
       </div>
-      <a class="card-footer" href="${r.hexUrl}" target="_blank" rel="noopener noreferrer"
-         onclick="event.stopPropagation()">
+      <div class="card-footer">
         <div class="card-info">
           <div class="card-title">${r.title}</div>
           ${r.hexTitle ? `<div class="card-hex-title">${r.hexTitle}</div>` : ''}
           <div class="card-sub">${r.subtitle}</div>
         </div>
         <div class="card-badge" style="background:${a.badge};color:${a.badgeTxt}">${a.label.toUpperCase()}</div>
-      </a>
+      </div>
+      <div class="card-actions">
+        <a class="card-open-btn" href="${r.hexUrl}" target="_blank" rel="noopener noreferrer">
+          Open report
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
+        <div style="position:relative">
+          <button class="card-folder-action ${inFolder?'in-folder':''}"
+                  id="fb-${r.id}" onclick="toggleFolderPicker(event,'${r.id}')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            ${inFolder ? 'In folder' : 'Add to folder'}
+          </button>
+          <div class="folder-picker" id="fp-${r.id}"></div>
+        </div>
+      </div>
+      ${detail ? (
+        '<div class="card-detail" id="cd-' + r.id + '">' +
+        '<div class="cd-section">' +
+          '<div class="cd-label">Questions this answers</div>' +
+          '<ul class="cd-questions">' + detail.questions.map(q => '<li>' + q + '</li>').join('') + '</ul>' +
+        '</div>' +
+        '<div class="cd-divider"></div>' +
+        '<div class="cd-two-col">' +
+          '<div>' +
+            '<div class="cd-label">Available breakdowns</div>' +
+            '<div class="cd-chips">' + detail.breakdowns.map(b => '<span class="cd-chip">' + b + '</span>').join('') + '</div>' +
+          '</div>' +
+          '<div>' +
+            '<div class="cd-label">Time range</div>' +
+            '<div class="cd-meta-val">' + detail.timeRange + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="cd-two-col">' +
+          '<div>' +
+            '<div class="cd-label">Chart types</div>' +
+            '<div class="cd-chips">' + detail.charts.map(c => '<span class="cd-chip cd-chart-chip">' + c + '</span>').join('') + '</div>' +
+          '</div>' +
+          '<div>' +
+            '<div class="cd-label">Best for</div>' +
+            '<div class="cd-best-for">' + detail.bestFor + '</div>' +
+          '</div>' +
+        '</div>' +
+        '</div>' +
+        '<button class="card-see-more" id="cdb-' + r.id + '" onclick="toggleCardDetail(\'' + r.id + '\', this)">' +
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>' +
+        ' See more</button>'
+      ) : ''}
     </div>`;
 }
 
 
-// ─── RENDER SECTIONS ─────────────────────────────────────────────────────────
+// ─── FILTERED REPORTS (search overrides category filter) ─────────────────────
 function filteredReports() {
   const q = searchQuery.toLowerCase().trim();
   return REPORTS.filter(r => {
-    if (activeArea !== 'ALL' && r.area !== activeArea) return false;
+    if (!q && activeArea !== 'ALL' && r.area !== activeArea) return false;
     if (!q) return true;
     return r.title.toLowerCase().includes(q)
       || r.subtitle.toLowerCase().includes(q)
       || r.area.toLowerCase().includes(q)
-      || r.tags.some(t => t.includes(q) || q.split(' ').some(w => w.length>2 && t.includes(w)));
+      || r.tags.some(t => t.includes(q) || q.split(' ').some(w => w.length > 2 && t.includes(w)))
+      || (REPORT_DETAILS[r.id] && REPORT_DETAILS[r.id].questions.some(qt => qt.toLowerCase().includes(q)));
   });
 }
 
+
+// ─── RENDER SECTIONS ─────────────────────────────────────────────────────────
 function renderSections() {
   const root = document.getElementById('sectionsRoot');
   const none = document.getElementById('noResults');
   const sub  = document.getElementById('pageSubtitle');
 
-  // Folder view
   if (activeFolderId) {
     const folder = loadFolders().find(f => f.id === activeFolderId);
     const list = folder ? REPORTS.filter(r => folder.reports.includes(r.id)) : [];
@@ -1477,7 +1928,7 @@ function renderSections() {
     if (!list.length) {
       root.innerHTML = `<div class="no-results"><div class="no-results-icon">📁</div>
         <div class="no-results-title">This folder is empty</div>
-        <div class="no-results-sub">Hover a report card and click 🗂 to add it here</div></div>`;
+        <div class="no-results-sub">Click "Add to folder" on any report card to add it here</div></div>`;
       none.style.display = 'none';
       return;
     }
@@ -1488,15 +1939,15 @@ function renderSections() {
     return;
   }
 
-  // Normal view
   const list = filteredReports();
-  const areaLabel = activeArea === 'ALL' ? '' : ` in ${AREAS[activeArea]?.label || activeArea}`;
+  const q = searchQuery.toLowerCase().trim();
+  const areaLabel = (!q && activeArea !== 'ALL') ? ` in ${AREAS[activeArea]?.label || activeArea}` : '';
   sub.textContent = `${list.length} report${list.length!==1?'s':''} available${areaLabel}`;
 
   if (!list.length) { root.innerHTML=''; none.style.display='block'; return; }
   none.style.display = 'none';
 
-  const areaOrder = activeArea==='ALL' ? Object.keys(AREAS) : [activeArea];
+  const areaOrder = (!q && activeArea !== 'ALL') ? [activeArea] : Object.keys(AREAS);
 
   root.innerHTML = areaOrder.map(areaKey => {
     const reps = list.filter(r => r.area === areaKey);
@@ -1536,6 +1987,7 @@ function setArea(area) {
   renderAll();
 }
 
+let _searchLogTimer = null;
 function handleSearch(val) {
   searchQuery = val;
   if (val) {
@@ -1549,11 +2001,18 @@ function handleSearch(val) {
     renderFolderList();
   }
   renderSections();
+  // Debounced log — fires 1.5s after user stops typing, min 3 chars
+  clearTimeout(_searchLogTimer);
+  if (val.trim().length >= 3) {
+    _searchLogTimer = setTimeout(() => {
+      const hits = filteredReports();
+      _logSearch(val.trim(), 'search', hits.map(r => r.id));
+    }, 1500);
+  }
 }
 
 
-// ─── IMAGE UPLOAD ─────────────────────────────────────────────────────────────
-// Click on zone → trigger file picker
+// ─── IMAGE ZONE HANDLERS ──────────────────────────────────────────────────────
 function zoneClick(event, id) {
   event.preventDefault();
   event.stopPropagation();
@@ -1563,41 +2022,23 @@ function zoneClick(event, id) {
   fi.click();
 }
 
-// Global file input change
-document.getElementById('globalFileInput').addEventListener('change', function() {
-  if (!this.files[0] || !pendingUploadId) return;
-  const id = pendingUploadId;
-  processFile(this.files[0], dataUrl => {
-    saveImage(id, dataUrl);
-    refreshCard(id);
-  });
-});
-
-// Drag & drop
-function zoneDragOver(e, el) {
-  e.preventDefault();
-  el.classList.add('drag-over');
-}
+function zoneDragOver(e, el) { e.preventDefault(); el.classList.add('drag-over'); }
 function zoneDragLeave(el) { el.classList.remove('drag-over'); }
+
 function zoneDrop(e, id, el) {
   e.preventDefault();
   el.classList.remove('drag-over');
   const file = e.dataTransfer.files[0];
   if (!file || !file.type.startsWith('image/')) return;
-  processFile(file, dataUrl => {
-    saveImage(id, dataUrl);
-    refreshCard(id);
-  });
+  processFile(file, dataUrl => { saveImage(id, dataUrl); refreshCard(id); });
 }
 
-// Remove image
 function doRemove(e, id) {
   e.preventDefault(); e.stopPropagation();
   removeImage(id);
   refreshCard(id);
 }
 
-// Re-render just one card in place
 function refreshCard(id) {
   const r = REPORTS.find(x => x.id===id);
   if (!r) return;
@@ -1606,50 +2047,304 @@ function refreshCard(id) {
   existing.outerHTML = cardHTML(r);
 }
 
-
-// ─── QUICK FIND ───────────────────────────────────────────────────────────────
-function runQuickFind() {
-  const input = document.getElementById('qfInput');
-  const result = document.getElementById('qfResult');
-  const q = input.value.trim().toLowerCase();
-  if (!q) { result.innerHTML=''; return; }
-
-  // Exact route match
-  for (const rule of ROUTES) {
-    if (rule.kw.some(kw => q.includes(kw))) {
-      const r = REPORTS.find(x => x.id===rule.id);
-      if (r) { result.innerHTML = buildQfCard(r); return; }
-    }
-  }
-
-  // Fuzzy fallback
-  const hits = REPORTS.filter(r =>
-    r.title.toLowerCase().includes(q) ||
-    r.subtitle.toLowerCase().includes(q) ||
-    r.tags.some(t => q.split(' ').filter(w=>w.length>2).some(w=>t.includes(w)))
-  );
-  if (hits.length) {
-    result.innerHTML = buildQfCard(hits[0]);
-  } else {
-    result.innerHTML = `<div class="qf-result" style="background:#FFF7ED;border-color:#FED7AA;color:#92400E">
-      No exact match — try the search bar above.
-    </div>`;
-  }
-}
-
-function buildQfCard(r) {
-  const a = AREAS[r.area] || { color:'#6B7280', label:r.area };
-  return `<div class="qf-result">
-    <div class="qf-result-tag" style="color:${a.color}">${a.label}</div>
-    <a href="${r.hexUrl}" target="_blank" rel="noopener">${r.title}</a>
-    ${r.subtitle}
-  </div>`;
-}
-
-// Also trigger Quick Find on Enter for the qfInput
-document.getElementById('qfInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') runQuickFind();
+document.getElementById('globalFileInput').addEventListener('change', function() {
+  if (!this.files[0] || !pendingUploadId) return;
+  const id = pendingUploadId;
+  processFile(this.files[0], dataUrl => {
+    saveImage(id, dataUrl);
+    refreshCard(id);
+    _showToast('Screenshot saved! ✓');
+  });
 });
+
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  REPORT DETAIL DATA — structured "See more" content for each card
+// ═══════════════════════════════════════════════════════════════════════════
+
+const REPORT_DETAILS = {
+  'r01': {
+    questions: [
+      'How is marketing performing overall this week?',
+      'Which channels drove the most MQLs and pipeline?',
+      'Are we tracking toward H1 targets?',
+      'What\'s the current win rate and pipeline health?'
+    ],
+    breakdowns: ['Channel', 'Segment', 'Week', 'Month', 'GTM Role'],
+    timeRange: 'Rolling biweekly, updated each Monday',
+    charts: ['Scorecards', 'Line trend', 'Bar', 'Summary table'],
+    bestFor: 'Leadership syncs, biweekly marketing team reviews, exec updates'
+  },
+  'r02': {
+    questions: [
+      'How is a specific channel performing on MQLs and pipeline?',
+      'What\'s the ROI of this channel vs. others?',
+      'How does performance compare month over month?',
+      'What\'s the cost per MQL for this channel?'
+    ],
+    breakdowns: ['Individual channel', 'Tier (T1/T2)', 'Week', 'Month', 'Segment'],
+    timeRange: 'Weekly cadence, trailing 12 months available',
+    charts: ['Line', 'Bar', 'Scorecard KPIs', 'Funnel stages'],
+    bestFor: 'Channel owners doing weekly performance reviews, budget justification'
+  },
+  'r03': {
+    questions: [
+      'How did we perform vs. last year across all channels?',
+      'What\'s our year-over-year MQL and pipeline growth?',
+      'How has cost per MQL trended annually?',
+      'Which channels improved or declined the most YoY?'
+    ],
+    breakdowns: ['Channel', 'Fiscal year', 'Segment', 'Quarter'],
+    timeRange: 'Full fiscal year; YoY comparison to prior year',
+    charts: ['Bar (YoY)', 'Line trend', 'Summary table', 'Variance column'],
+    bestFor: 'Annual planning cycles, board prep, exec QBRs, investor reporting'
+  },
+  'r04': {
+    questions: [
+      'What % of MQLs from a given month converted to pipeline?',
+      'How long does MQL → pipeline conversion take by cohort?',
+      'Which cohorts are converting best, and why?',
+      'Where in the funnel are we losing leads?'
+    ],
+    breakdowns: ['Cohort month', 'Channel', 'Tier', 'Segment', 'Time to convert'],
+    timeRange: 'Monthly cohorts, 6–12 month lookback',
+    charts: ['Cohort heatmap', 'Funnel stages', 'Line (conversion rate)'],
+    bestFor: 'Funnel analysis, conversion optimization, marketing-to-sales handoff reviews'
+  },
+  'r05': {
+    questions: [
+      'How many MQLs did we generate this week?',
+      'What\'s the breakdown by tier (T1 vs. T2)?',
+      'What\'s the total account value of this week\'s MQLs?',
+      'Which channels are driving MQL volume right now?'
+    ],
+    breakdowns: ['Channel', 'Tier (T1/T2)', 'Account value range', 'Week', 'Segment'],
+    timeRange: 'Weekly, trailing 13 weeks',
+    charts: ['Scorecard KPIs', 'Stacked bar by channel', 'Trend line'],
+    bestFor: 'Monday standups, weekly MQL reporting, SDR/marketing alignment'
+  },
+  'r06': {
+    questions: [
+      'How many clicks did our tracked links get this week?',
+      'Which segments or products drove the most engagement?',
+      'How do click rates compare week over week?',
+      'Which campaigns or events are generating the most traffic?'
+    ],
+    breakdowns: ['Link / segment', 'Product', 'Week', 'Campaign'],
+    timeRange: 'Weekly, rolling 8 weeks',
+    charts: ['Bar', 'Ranked table', 'Trend line'],
+    bestFor: 'Content performance tracking, event follow-up analysis, link campaign reviews'
+  },
+  'r07': {
+    questions: [
+      'Who owns the pipeline — marketing, SDR, or AE?',
+      'Which tactics are driving the most pipeline dollars?',
+      'How is owned pipeline distributed across GTM roles?',
+      'What\'s marketing-sourced vs. marketing-influenced pipe?'
+    ],
+    breakdowns: ['GTM owner', 'Tactic', 'Segment', 'Month', 'AE / SDR'],
+    timeRange: 'Monthly, rolling quarter, fiscal year',
+    charts: ['Stacked bar by role', 'Bar by tactic', 'Attribution table'],
+    bestFor: 'GTM alignment meetings, pipeline attribution debates, marketing ROI reporting'
+  },
+  'r08': {
+    questions: [
+      'How many demo requests and form fills came in this week?',
+      'Where are inbound leads coming from?',
+      'What\'s the conversion from form fill to MQL?',
+      'Which pages or campaigns drive the most inbound?'
+    ],
+    breakdowns: ['Source', 'Landing page', 'Week', 'Channel', 'Campaign'],
+    timeRange: 'Weekly, trailing 8 weeks',
+    charts: ['Bar', 'Funnel (form → MQL)', 'Trend line', 'Source breakdown table'],
+    bestFor: 'Demand gen reviews, website performance tracking, inbound optimization'
+  },
+  'r09': {
+    questions: [
+      'Which event or campaign drove the most pipeline?',
+      'What\'s the pipeline attributed to a specific event?',
+      'How does webinar pipeline compare to conference pipeline?',
+      'What\'s the ROI of our event spend?'
+    ],
+    breakdowns: ['Event name', 'Campaign type', 'Segment', 'Quarter', 'Influenced vs. sourced'],
+    timeRange: 'Event-based, trailing 12 months',
+    charts: ['Ranked bar', 'Attribution table', 'Waterfall by event'],
+    bestFor: 'Event ROI analysis, campaign attribution reviews, field marketing planning'
+  },
+  'r10': {
+    questions: [
+      'Which channel has the best pipeline per dollar spent?',
+      'Where should we shift budget for maximum ROI?',
+      'What\'s cost per MQL by channel, and how is it trending?',
+      'Which channels are most and least efficient right now?'
+    ],
+    breakdowns: ['Channel', 'Segment', 'Quarter', 'Fiscal year', 'Spend tier'],
+    timeRange: 'Quarterly and annual; rolling 4 quarters available',
+    charts: ['ROI bar chart', 'Cost per MQL trend', 'Efficiency scatter', 'Summary table'],
+    bestFor: 'Budget allocation decisions, quarterly business reviews, CMO reporting'
+  },
+  'r11': {
+    questions: [
+      'Who are our happiest customers that could become advocates?',
+      'Which CSM accounts have the highest NPS scores?',
+      'Who should we reach out to for referrals or case studies?',
+      'Where are advocate opportunities by segment or AE?'
+    ],
+    breakdowns: ['AE', 'CSM', 'Account', 'NPS score range', 'Segment', 'Product'],
+    timeRange: 'Latest NPS survey cycle',
+    charts: ['Ranked table', 'NPS distribution', 'Segment breakdown'],
+    bestFor: 'Referral outreach, customer marketing programs, case study identification'
+  },
+  'r12': {
+    questions: [
+      'How long does it take from MQL to pipeline on average?',
+      'Where in the funnel are deals getting stuck?',
+      'How is velocity trending month over month?',
+      'Which channels or segments convert fastest?'
+    ],
+    breakdowns: ['Channel', 'Tier', 'AE / SDR', 'Month', 'Segment'],
+    timeRange: 'Monthly, trailing 12 months',
+    charts: ['Duration bar', 'Trend line (velocity)', 'Funnel stage breakdown'],
+    bestFor: 'SDR/AE efficiency reviews, funnel optimization, sales cycle analysis'
+  },
+  'r13': {
+    questions: [
+      'How is pipeline distributed across Payroll, TM, and other products?',
+      'Which segment (franchise, SMB, enterprise) has the most pipeline?',
+      'How does product-level pipeline compare to target?',
+      'Which product line is growing fastest in pipeline?'
+    ],
+    breakdowns: ['Product', 'Segment', 'Month', 'GTM owner', 'Pipeline stage'],
+    timeRange: 'Monthly, quarter-to-date',
+    charts: ['Stacked bar by product', 'Pie breakdown', 'Pipeline table'],
+    bestFor: 'Product marketing reviews, segment strategy, cross-functional pipeline discussions'
+  },
+  'r14': {
+    questions: [
+      'How did we perform over the last 28 days vs. the prior 28?',
+      'Which KPIs improved or declined this period?',
+      'What\'s the SDR and franchise MQL breakdown for this window?',
+      'How does recent performance compare to trend?'
+    ],
+    breakdowns: ['Channel', 'Segment', '28-day window comparison', 'SDR vs. marketing'],
+    timeRange: 'Rolling 28 days vs. prior 28-day period',
+    charts: ['KPI scorecards', 'Trend lines', 'Bar (period comparison)'],
+    bestFor: 'Month-end check-ins, rolling performance reviews, flexible time-window analysis'
+  },
+  'r15': {
+    questions: [
+      'Are we on track to hit our H1 MQL and pipeline targets?',
+      'What\'s the gap to goal by channel?',
+      'Which channels are over or under target right now?',
+      'What\'s our projected H1 landing based on current pace?'
+    ],
+    breakdowns: ['Channel', 'OKR metric', 'Week', 'Segment'],
+    timeRange: 'H1 FY2026 (January – June 2026), weekly updates',
+    charts: ['Progress vs. target (gauge)', 'Bullet chart', 'Line (actual vs. target)'],
+    bestFor: 'OKR reviews, leadership target updates, weekly goal-tracking standups'
+  },
+  'r17': {
+    questions: [
+      'What % of opportunities are we winning?',
+      'How does win rate vary by AE, segment, or deal size?',
+      'How is win rate trending over the past four quarters?',
+      'Which deal types or segments have the highest close rates?'
+    ],
+    breakdowns: ['AE', 'Segment', 'Deal size', 'Quarter', 'Product'],
+    timeRange: 'Quarterly, trailing 4 quarters',
+    charts: ['Bar (win rate by AE)', 'Trend line', 'Segment breakdown table'],
+    bestFor: 'Sales performance reviews, pipeline quality analysis, forecast accuracy'
+  },
+  'r18': {
+    questions: [
+      'How many referrals are we generating through Payroll and AIO?',
+      'Who are the top referrers, and how often do they refer?',
+      'What\'s the conversion rate from referral to MQL?',
+      'How is referral volume trending week over week?'
+    ],
+    breakdowns: ['Referral source (Payroll, AIO)', 'Referrer account', 'Week'],
+    timeRange: 'Weekly, rolling quarter',
+    charts: ['Bar', 'Ranked referrer table', 'Conversion funnel'],
+    bestFor: 'Referral program tracking, partner reviews, referral incentive analysis'
+  },
+  'r20': {
+    questions: [
+      'How many accounts have adopted T&S / Time Scheduling?',
+      'What\'s the weekly active usage (MAU) by product feature?',
+      'Which products are seeing the highest adoption rates?',
+      'How is adoption trending — are we growing or plateauing?'
+    ],
+    breakdowns: ['Product feature', 'Segment', 'Week', 'Account tier'],
+    timeRange: 'Weekly, trailing 13 weeks',
+    charts: ['Line (MAU trend)', 'Bar by feature', 'Scorecard'],
+    bestFor: 'Product adoption reviews, expansion pipeline tracking, CS / product syncs'
+  },
+  'r21': {
+    questions: [
+      'What\'s our projected year-end ARR under different scenarios?',
+      'How does spend sensitivity affect the ARR projection?',
+      'What are the bull, base, and bear case landing points?',
+      'What inputs would need to change to hit our $29M target?'
+    ],
+    breakdowns: ['Scenario (base / bull / bear)', 'Spend level', 'Segment', 'Month'],
+    timeRange: 'FY2026 full-year projection, monthly cadence',
+    charts: ['Scenario comparison bar', 'Waterfall', 'Sensitivity line', 'ARR bridge'],
+    bestFor: 'Board prep, financial planning, sensitivity analysis, CFO / CMO alignment'
+  },
+  'r24': {
+    questions: [
+      'Which lead source is driving the most pipeline?',
+      'How does won ARR break down by source?',
+      'What\'s the pipe-to-won conversion rate by source?',
+      'Are organic, paid, or partner sources more efficient?'
+    ],
+    breakdowns: ['Lead source', 'Segment', 'Quarter', 'Won vs. open pipe'],
+    timeRange: 'Quarterly, trailing 4 quarters',
+    charts: ['Ranked bar by source', 'Stacked bar (won vs. pipe)', 'Source comparison table'],
+    bestFor: 'Source attribution analysis, channel strategy, inbound vs. outbound mix decisions'
+  },
+  'r25': {
+    questions: [
+      'Which campaigns touched MQLs before they converted?',
+      'What\'s the multi-touch attribution breakdown by campaign?',
+      'How many touches does it typically take to convert?',
+      'Which campaigns have first-touch vs. last-touch influence?'
+    ],
+    breakdowns: ['Campaign', 'Channel', 'MQL date', 'Touch type (first / mid / last)'],
+    timeRange: 'Last 90 days, monthly refresh',
+    charts: ['Multi-touch attribution table', 'Stacked bar (touch volume)', 'Funnel'],
+    bestFor: 'Campaign attribution, multi-touch analysis, content and nurture program evaluation'
+  },
+  'r26': {
+    questions: [
+      'What\'s our FY26 ending ARR target by segment, and where are we tracking?',
+      'What\'s the current gap to the $29M total ARR goal?',
+      'How is Franchise Sales ARR trending vs. its $7.5M target?',
+      'Which segment is furthest ahead or behind on its 2026 target?'
+    ],
+    breakdowns: ['Segment (Franchise Sales, CFA Net, PA Inbound, Insurance Broker, Corporate)', 'Month', 'Cumulative vs. monthly'],
+    timeRange: 'FY2026 full year (Jan – Dec 2026), monthly actuals updated',
+    charts: ['KPI scorecard ($25.4M vs. $29M)', 'Line (actual vs. target by segment)', 'ARR bridge bar', 'Segment allocation donut'],
+    bestFor: 'Revenue leadership reviews, segment target tracking, board-level ARR reporting'
+  },
+};
+
+// ─── Toggle expanded card detail ──────────────────────────────────────────────
+function toggleCardDetail(id, btn) {
+  const panel = document.getElementById('cd-' + id);
+  if (!panel) return;
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  btn.innerHTML = isOpen
+    ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg> See more'
+    : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg> See less';
+}
+
+
+
+
 
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1836,6 +2531,36 @@ renderFolderList();
 renderAll();
 
 
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  SEARCH ANALYTICS — log queries + results to localStorage
+// ═══════════════════════════════════════════════════════════════════════════
+
+const SEARCH_LOG_KEY = 'ws_search_log_v1';
+const SEARCH_LOG_MAX = 600; // rolling cap
+
+function _logSearch(query, source, hitIds) {
+  const q = (query || '').trim().toLowerCase();
+  if (!q || q.length < 2) return;
+  try {
+    const log = _getSearchLog();
+    log.push({ ts: Date.now(), q, src: source, hits: hitIds || [] });
+    // rolling window — drop oldest if over cap
+    const trimmed = log.length > SEARCH_LOG_MAX ? log.slice(log.length - SEARCH_LOG_MAX) : log;
+    localStorage.setItem(SEARCH_LOG_KEY, JSON.stringify(trimmed));
+  } catch(e) { /* ignore storage errors */ }
+}
+
+function _getSearchLog() {
+  try { return JSON.parse(localStorage.getItem(SEARCH_LOG_KEY)) || []; } catch { return []; }
+}
+
+function clearSearchLog() {
+  if (!confirm('Clear all search analytics data?')) return;
+  localStorage.removeItem(SEARCH_LOG_KEY);
+  renderSearchAnalytics();
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 //  CHATBOT — floating popup report finder
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1934,6 +2659,37 @@ function cbChip(btn, text) {
   _cbRoute(text);
 }
 
+
+// ─── CHATBOT KEYWORD ROUTES ──────────────────────────────────────────────────
+// Maps known query patterns → specific report IDs for precise matching
+const ROUTES = [
+  { kw:['roi','return on investment','pipe per dollar','best channel','worst channel','all channel cost','channel roi','cost efficiency','spend efficiency'], id:'r10' },
+  { kw:['on track','kr target','h1 target','okr','goal','progress vs target','are we on track','hitting target','target tracker'], id:'r15' },
+  { kw:['how are we doing','summary','biweekly','weekly summary','overview','marketing overview','all channels','channel mix'], id:'r01' },
+  { kw:['28 day','last 28','rolling kpi','last month','rolling 28','last 28 days','month over month','recent kpi'], id:'r14' },
+  { kw:['how many mql','mql count','mql this week','mql volume','mql trend','mql by week','weekly mql'], id:'r05' },
+  { kw:['which event','which webinar','which campaign drove','event pipeline','campaign entity','event roi','webinar pipeline'], id:'r09' },
+  { kw:['form fill','demo request','inbound lead','form fills','inbound','demo requests','web leads'], id:'r08' },
+  { kw:['win rate','pipe to won','close rate','win loss','won deals','closed won'], id:'r17' },
+  { kw:['how long','duration','velocity','days to convert','time to convert','speed','mql to pipe time','mql velocity'], id:'r12' },
+  { kw:['mql cohort','mql conversion rate','cohort conversion','cohort','mql to pipeline rate'], id:'r04' },
+  { kw:['single channel','one channel','deep dive','channel deep dive','channel breakdown','channel focus'], id:'r02' },
+  { kw:['gtm owner','gtm role','marketing owned','by tactic','tactic breakdown','by owner','who owns pipe'], id:'r07' },
+  { kw:['by product','hiring pipeline','payroll pipe','product revenue','product segment','revenue by product'], id:'r13' },
+  { kw:['nps','advocate','happy customer','referral outreach','customer satisfaction','promoter','csm outreach'], id:'r11' },
+  { kw:['arr forecast','projected arr','eoy arr','spend sensitivity','what if','forecast','arr model','projection'], id:'r21' },
+  { kw:['payroll referral','aio referral','referral rock','referral conversion','who is referring'], id:'r18' },
+  { kw:['t&s adoption','chat adoption','product adoption','feature adoption','mau','active users'], id:'r20' },
+  { kw:['link click','click tracker','click tracking','link tracking','click-through'], id:'r06' },
+  { kw:['annual scorecard','2025 scorecard','scorecard','year over year','yoy','year-over-year','yearly comparison','annual comparison','annual growth','growth trend','historical','historical trend','year vs year','past year','vs last year'], id:'r03' },
+  { kw:['by source','pipe by source','won by source','source breakdown','pipeline source','lead source','source mix'], id:'r24' },
+  { kw:['mql touchpoints','touchpoints by campaign','campaign touches','mql date touches','multi-touch','touch attribution','campaign attribution'], id:'r25' },
+  { kw:['fy26 target','arr target','revenue target','ending arr','franchise sales arr','cfa arr','pa inbound arr','net new arr','arr by segment','fy2026 target','2026 revenue'], id:'r26' },
+  { kw:['nrr','net revenue retention','expansion','churn','retention rate','gross retention'], id:'r21' },
+  { kw:['mql by channel','channel mql','which channel drives mql','channel performance','channel comparison'], id:'r02' },
+  { kw:['pipeline by stage','pipe stage','stage breakdown','opp stage'], id:'r09' },
+];
+
 /* ---------- routing ---------- */
 
 const CB_STOP_WORDS = new Set([
@@ -1990,7 +2746,7 @@ function _cbRoute(query) {
             if (titleLow.includes(w))    score += 3;  // title match = high signal
             else if (haystack.includes(w)) score += 1;
           }
-          if (score >= 2) scored.push({ ...r, _score: score }); // minimum threshold
+          if (score >= 3) scored.push({ ...r, _score: score }); // minimum threshold — require at least 1 title match or 3 tag matches
         });
         scored.sort((a, b) => b._score - a._score);
         matched = scored.slice(0, 3);
@@ -1999,6 +2755,9 @@ function _cbRoute(query) {
 
     cbPendingResults = matched;
     cbLastIds = [];
+
+    // Log the chatbot query + results
+    _logSearch(query, 'chat', matched.map(r => r.id));
 
     if (!matched.length) {
       _cbBotMsg(
@@ -2173,14 +2932,16 @@ function renderAdminTable() {
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <button class="admin-add-btn" onclick="openAddModal()">＋ Add Report</button>
-          <button class="admin-add-btn" style="background:#059669" onclick="exportImages()" title="Download all screenshots as a backup file">📤 Export Screenshots</button>
+          <button class="admin-add-btn" style="background:#2563EB" onclick="renderSearchAnalytics()">📊 Search Insights</button>
+          <button class="admin-add-btn" style="background:#7C3AED" onclick="bakeAndDownload()" title="Bake all your screenshots into the HTML and download for sharing">🚀 Bake & Share</button>
+          <button class="admin-add-btn" style="background:#059669" onclick="exportImages()" title="Download all screenshots as a backup file">📤 Backup Screenshots</button>
           <label class="admin-add-btn" style="background:#0891B2;cursor:pointer" title="Upload a previously exported screenshots file">
-            📥 Import Screenshots
+            📥 Restore Screenshots
             <input type="file" accept=".json" style="display:none" onchange="importImages(this)">
           </label>
         </div>
       </div>
-      <p style="font-size:12px;color:#6B7280;margin-bottom:14px">💡 <b>Moving to a new device or Netlify?</b> Export screenshots here → import them there. Takes 5 seconds.</p>
+      <p style="font-size:12px;color:#6B7280;margin-bottom:14px">💡 <b>Screenshots you upload are only visible to you</b> until you click <b>Bake &amp; Share</b> — that downloads an updated HTML file to push to GitHub so everyone sees them.</p>
       <table class="admin-table">
         <thead>
           <tr>
@@ -2192,12 +2953,153 @@ function renderAdminTable() {
     </div>`;
 }
 
+// ─── SEARCH ANALYTICS PANEL ──────────────────────────────────────────────────
+function renderSearchAnalytics() {
+  const log = _getSearchLog();
+
+  // Aggregate by query
+  const byQuery = {};
+  log.forEach(entry => {
+    const key = entry.q;
+    if (!byQuery[key]) byQuery[key] = { q: key, count: 0, sources: new Set(), hits: [], lastTs: 0 };
+    byQuery[key].count++;
+    byQuery[key].sources.add(entry.src);
+    if (entry.hits.length) byQuery[key].hits = entry.hits; // keep latest hit list
+    if (entry.ts > byQuery[key].lastTs) byQuery[key].lastTs = entry.ts;
+  });
+
+  const rows = Object.values(byQuery).sort((a, b) => b.count - a.count);
+  const totalSearches = log.length;
+  const uniqueQueries = rows.length;
+  const noMatchRows   = rows.filter(r => !r.hits.length);
+  const noMatchRate   = totalSearches ? Math.round(noMatchRows.length / uniqueQueries * 100) : 0;
+
+  // Tab state (persist on window)
+  const tab = window._saTab || 'all';
+
+  function filtered(t) {
+    if (t === 'nomatch') return noMatchRows;
+    if (t === 'chat')   return rows.filter(r => r.sources.has('chat'));
+    if (t === 'search') return rows.filter(r => r.sources.has('search'));
+    return rows;
+  }
+
+  function tabBtn(t, label, count) {
+    return `<button class="sa-tab ${tab===t?'active':''}" onclick="window._saTab='${t}';renderSearchAnalytics()">${label} <span style="opacity:.6">(${count})</span></button>`;
+  }
+
+  function rowsHTML(data) {
+    if (!data.length) return `<tr><td colspan="5" class="sa-empty">No searches yet${tab!=='all'?' in this filter':''} 🔍</td></tr>`;
+    return data.map(r => {
+      const noMatch = !r.hits.length;
+      const srcBadges = [...r.sources].map(s =>
+        s === 'chat'
+          ? '<span class="sa-badge-chat">💬 Chat</span>'
+          : '<span class="sa-badge-search">🔎 Search</span>'
+      ).join(' ');
+      const freqCls = r.count >= 5 ? 'high' : '';
+      const resultCell = noMatch
+        ? '<span class="sa-no-match-pill">⚠ No match</span>'
+        : r.hits.slice(0,2).map(id => {
+            const rep = REPORTS.find(x => x.id === id);
+            return rep ? `<span style="font-size:11.5px;color:#374151">${rep.title}</span>` : id;
+          }).join('<br>');
+      const ago = _timeAgo(r.lastTs);
+      return `<tr class="${noMatch ? 'sa-row-nomatch' : ''}">
+        <td style="font-weight:600;color:#111827">${r.q}</td>
+        <td>${srcBadges}</td>
+        <td><span class="sa-freq ${freqCls}">${r.count}</span></td>
+        <td>${resultCell}</td>
+        <td style="color:#9CA3AF;font-size:12px;white-space:nowrap">${ago}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function _timeAgo(ts) {
+    if (!ts) return '—';
+    const diff = Date.now() - ts;
+    if (diff < 60000)   return 'just now';
+    if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
+    if (diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
+    return Math.floor(diff/86400000) + 'd ago';
+  }
+
+  const visibleRows = filtered(tab);
+
+  document.getElementById('adminRoot').innerHTML = `
+    <div class="admin-panel">
+      <div class="admin-panel-header">
+        <div>
+          <div class="admin-panel-title">📊 Search Insights</div>
+          <div style="font-size:12px;color:#9CA3AF;margin-top:3px">What people are searching for — logged automatically from the chatbot and search bar</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="admin-add-btn" onclick="renderAdminTable()">← Back to Reports</button>
+          <button class="sa-clear-btn" onclick="clearSearchLog()">Clear log</button>
+        </div>
+      </div>
+
+      <div class="sa-summary">
+        <div class="sa-stat">
+          <div class="sa-stat-num">${totalSearches}</div>
+          <div class="sa-stat-lbl">Total searches</div>
+        </div>
+        <div class="sa-stat">
+          <div class="sa-stat-num">${uniqueQueries}</div>
+          <div class="sa-stat-lbl">Unique queries</div>
+        </div>
+        <div class="sa-stat ${noMatchRows.length ? 'warn' : ''}">
+          <div class="sa-stat-num">${noMatchRows.length}</div>
+          <div class="sa-stat-lbl">No-match queries</div>
+        </div>
+        <div class="sa-stat">
+          <div class="sa-stat-num">${noMatchRate}%</div>
+          <div class="sa-stat-lbl">No-match rate</div>
+        </div>
+      </div>
+
+      ${noMatchRows.filter(r => r.count >= 2).length ? `
+      <div style="background:#FFF7F7;border:1.5px solid #FCA5A5;border-radius:10px;padding:12px 16px;margin-bottom:16px">
+        <div style="font-size:12px;font-weight:700;color:#B91C1C;margin-bottom:6px">⚠️ Needs attention — searched 2+ times with no match:</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${noMatchRows.filter(r => r.count >= 2).map(r =>
+            `<span style="background:#FEE2E2;color:#B91C1C;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600">${r.q} <span style="opacity:.7">(×${r.count})</span></span>`
+          ).join('')}
+        </div>
+      </div>` : ''}
+
+      <div class="sa-tabs">
+        ${tabBtn('all',    'All',       rows.length)}
+        ${tabBtn('nomatch','No match',  noMatchRows.length)}
+        ${tabBtn('chat',   'Chatbot',   rows.filter(r=>r.sources.has('chat')).length)}
+        ${tabBtn('search', 'Search bar',rows.filter(r=>r.sources.has('search')).length)}
+      </div>
+
+      <table class="sa-table">
+        <thead>
+          <tr>
+            <th>Query</th>
+            <th>Source</th>
+            <th>Times</th>
+            <th>Top result</th>
+            <th>Last seen</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHTML(visibleRows)}</tbody>
+      </table>
+
+      ${!totalSearches ? `<p style="font-size:12px;color:#9CA3AF;margin-top:12px">Searches will appear here automatically as people use the chatbot and search bar.</p>` : ''}
+    </div>`;
+}
+
+
 /* ── Add / Edit modal ── */
 function openAddModal() {
   _editingId = null;
   document.getElementById('adminModalTitle').textContent = '＋ Add New Report';
   ['amTitle','amHexTitle','amSubtitle','amHexUrl','amTags'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('amArea').value = 'MQL';
+  amResetImgField();
   document.getElementById('adminModalBg').classList.add('open');
   setTimeout(() => document.getElementById('amTitle').focus(), 80);
 }
@@ -2213,6 +3115,18 @@ function openEditModal(id) {
   document.getElementById('amSubtitle').value = r.subtitle || '';
   document.getElementById('amHexUrl').value   = r.hexUrl   || '';
   document.getElementById('amTags').value     = (r.tags || []).join(', ');
+  // Pre-populate existing screenshot in the zone if one is saved
+  const existingImg = loadImage(id);
+  if (existingImg) {
+    _pendingAdminImg = null; // don't re-save unless they upload a new one
+    const preview = document.getElementById('amImgPreview');
+    preview.src = existingImg;
+    preview.style.display = 'block';
+    document.getElementById('amImgPlaceholder').style.display = 'none';
+    document.getElementById('amImgRemove').style.display = 'block';
+  } else {
+    amResetImgField();
+  }
   document.getElementById('adminModalBg').classList.add('open');
   setTimeout(() => document.getElementById('amTitle').focus(), 80);
 }
@@ -2220,6 +3134,51 @@ function openEditModal(id) {
 function closeAdminModal() {
   document.getElementById('adminModalBg').classList.remove('open');
   _editingId = null;
+  _pendingAdminImg = null;
+}
+
+// ─── TOAST NOTIFICATION ──────────────────────────────────────────────────────
+function _showToast(msg, durationMs = 2800) {
+  const el = document.getElementById('wsToast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._toastTimer);
+  el._toastTimer = setTimeout(() => el.classList.remove('show'), durationMs);
+}
+
+// ─── Screenshot field helpers ─────────────────────────────────────────────────
+let _pendingAdminImg = null;
+
+function amImgDrop(e) {
+  const file = e.dataTransfer.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  amImgProcess(file);
+}
+function amImgFileChange(input) {
+  if (!input.files[0]) return;
+  amImgProcess(input.files[0]);
+}
+function amImgProcess(file) {
+  processFile(file, dataUrl => {
+    _pendingAdminImg = dataUrl;
+    const preview = document.getElementById('amImgPreview');
+    preview.src = dataUrl;
+    preview.style.display = 'block';
+    document.getElementById('amImgPlaceholder').style.display = 'none';
+    document.getElementById('amImgRemove').style.display = 'block';
+  });
+}
+function amClearImg() {
+  _pendingAdminImg = null;
+  document.getElementById('amImgPreview').style.display = 'none';
+  document.getElementById('amImgPreview').src = '';
+  document.getElementById('amImgPlaceholder').style.display = '';
+  document.getElementById('amImgRemove').style.display = 'none';
+  document.getElementById('amImgInput').value = '';
+}
+function amResetImgField() {
+  amClearImg();
 }
 
 function saveAdminForm() {
@@ -2243,17 +3202,108 @@ function saveAdminForm() {
       edits[_editingId] = { title, area, hexTitle, subtitle, hexUrl, tags };
       saveAdminEdits(edits);
     }
+    // Save screenshot for existing report if one was dropped in
+    if (_pendingAdminImg) { saveImage(_editingId, _pendingAdminImg); }
   } else {
+    const newId = 'custom_' + Date.now();
     const customs = loadCustomReports();
-    customs.push({ id:'custom_'+Date.now(), area, title, hexTitle, subtitle, hexUrl,
+    customs.push({ id: newId, area, title, hexTitle, subtitle, hexUrl,
                    popular:false, attrType:'none', filters:'', tags });
     saveCustomReports(customs);
+    // Auto-save the screenshot immediately with the new report's ID
+    if (_pendingAdminImg) { saveImage(newId, _pendingAdminImg); }
   }
 
+  const savedImgThisTime = !!_pendingAdminImg;
+  const savedArea = area; // capture before reset
+  _pendingAdminImg = null;
   closeAdminModal();
   reloadReports();
-  renderAdminTable();
-  document.getElementById('pageSubtitle').textContent = `${REPORTS.length} reports · admin view`;
+
+  // If a screenshot was just attached, exit admin mode and jump to the card
+  // so there's immediate visual confirmation it worked
+  if (savedImgThisTime) {
+    adminView = false;
+    document.getElementById('adminRoot').style.display    = 'none';
+    document.getElementById('sectionsRoot').style.display = '';
+    document.querySelectorAll('.admin-cat-item').forEach(el => el.classList.remove('active'));
+    activeArea = savedArea;
+    renderFolderList();
+    renderAll();
+    // Scroll to the top of the content so the card is visible
+    document.querySelector('.main').scrollTop = 0;
+    // Brief toast confirmation
+    _showToast('Screenshot saved! ✓');
+  } else {
+    renderAdminTable();
+    renderAll();
+    document.getElementById('pageSubtitle').textContent = `${REPORTS.length} reports · admin view`;
+  }
+}
+
+/* ── Bake screenshots into the HTML for universal sharing ── */
+async function bakeAndDownload() {
+  // Collect localStorage screenshots
+  const localImgs = {};
+  Object.keys(localStorage).forEach(k => {
+    if (k.startsWith('ws_report_img_')) localImgs[k] = localStorage.getItem(k);
+  });
+
+  if (!Object.keys(localImgs).length) {
+    alert('No screenshots uploaded yet. Add screenshots to reports first, then bake.');
+    return;
+  }
+
+  _showToast('Preparing your file — this may take a moment…');
+
+  // Fetch the current page source
+  let html;
+  try {
+    const resp = await fetch(location.href);
+    if (!resp.ok) throw new Error('bad response');
+    html = await resp.text();
+  } catch(e) {
+    // Local file fallback — auto-download the backup JSON so the user can
+    // drag it to Cowork and have it baked in automatically
+    exportImages();
+    setTimeout(() => {
+      alert('You\'re viewing this locally, so the one-click bake can\'t run here.\n\nHere\'s what to do:\n\n1. ✅ Screenshots backup just downloaded!\n2. Drag that .json file into your Cowork chat\n3. I\'ll bake it into the HTML automatically so everyone sees the screenshots 🚀\n\nOnce deployed to Netlify, "Bake & Share" will work in one click.');
+    }, 400);
+    return;
+  }
+
+  // Merge new images into BAKED_IMAGES
+  const merged = { ...BAKED_IMAGES, ...localImgs };
+  const bakedStr = 'const BAKED_IMAGES = ' + JSON.stringify(merged) + ';';
+
+  // Find and replace BAKED_IMAGES block using brace-counting
+  const startMarker = 'const BAKED_IMAGES = {';
+  const startIdx = html.indexOf(startMarker);
+  if (startIdx === -1) {
+    alert('Could not locate BAKED_IMAGES in source. Please contact your developer.');
+    return;
+  }
+  let depth = 0, endIdx = startIdx;
+  for (let i = startIdx; i < html.length; i++) {
+    if (html[i] === '{') depth++;
+    else if (html[i] === '}') { depth--; if (depth === 0) { endIdx = i + 1; break; } }
+  }
+  if (html[endIdx] === ';') endIdx++; // include the semicolon
+
+  const updatedHtml = html.slice(0, startIdx) + bakedStr + html.slice(endIdx);
+
+  // Trigger download
+  const blob = new Blob([updatedHtml], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'marketing_directory.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+
+  const count = Object.keys(localImgs).length;
+  _showToast(`Done! ${count} screenshot${count!==1?'s':''} baked in — push to GitHub to share 🚀`, 4000);
 }
 
 /* ── Export / Import screenshots ── */
@@ -2316,7 +3366,40 @@ document.getElementById('adminModalBg').addEventListener('click', e => {
   if (e.target === document.getElementById('adminModalBg')) closeAdminModal();
 });
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
+// ─── PASSWORD GATE ────────────────────────────────────────────────────────────
+const PW_KEY = 'hexplorer_auth_v2';
+const CORRECT_PW = '1t1s';
+
+function checkGatePassword() {
+  const input = document.getElementById('gateInput');
+  const errEl = document.getElementById('gateError');
+  const val = input.value.trim().toLowerCase();
+  if (val === CORRECT_PW) {
+    sessionStorage.setItem(PW_KEY, '1');
+    const gate = document.getElementById('pwGate');
+    gate.classList.add('hidden');
+    setTimeout(() => gate.remove(), 420);
+  } else {
+    input.classList.add('pw-error');
+    errEl.textContent = 'Incorrect password. Try again.';
+    input.value = '';
+    input.focus();
+    setTimeout(() => input.classList.remove('pw-error'), 500);
+  }
+}
+
+(function() {
+  if (sessionStorage.getItem(PW_KEY) === '1') {
+    const gate = document.getElementById('pwGate');
+    if (gate) gate.remove();
+  } else {
+    setTimeout(() => {
+      const inp = document.getElementById('gateInput');
+      if (inp) inp.focus();
+    }, 120);
+  }
+})();
+
 </script>
 </body>
 </html>
