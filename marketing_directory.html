@@ -367,6 +367,23 @@
       cursor: pointer;
     }
 
+    .card-img-link {
+      display: block; position: relative; text-decoration: none;
+      border-radius: 10px 10px 0 0; overflow: hidden;
+    }
+    .card-img-link:hover .card-img-overlay { opacity: 1; }
+    .card-img-overlay {
+      position: absolute; inset: 0;
+      background: rgba(37,99,235,0.55);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.18s;
+      border-radius: 10px 10px 0 0;
+    }
+    .card-img-open {
+      color: white; font-size: 13px; font-weight: 700;
+      background: rgba(0,0,0,0.25); padding: 6px 14px;
+      border-radius: 20px; letter-spacing: 0.01em;
+    }
     .card-screenshot {
       width: 100%; height: 100%;
       object-fit: cover; object-position: top left;
@@ -1840,7 +1857,10 @@ function cardHTML(r) {
            ondragover="zoneDragOver(event,this)"
            ondragleave="zoneDragLeave(this)"
            ondrop="zoneDrop(event,'${r.id}',this)">
-        <img class="card-screenshot" id="img-${r.id}" src="${imgSrc}" alt="${r.title}">
+        <a href="${r.hexUrl}" target="_blank" rel="noopener" class="card-img-link" title="Open in Hex">
+          <img class="card-screenshot" id="img-${r.id}" src="${imgSrc}" alt="${r.title}">
+          <div class="card-img-overlay"><span class="card-img-open">↗ Open report</span></div>
+        </a>
         <button class="upload-corner" title="${hasReal ? 'Replace screenshot' : 'Upload screenshot'}"
                 onclick="zoneClick(event,'${r.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2680,7 +2700,7 @@ function cbChip(btn, text) {
 // Maps known query patterns → specific report IDs for precise matching
 const ROUTES = [
   { kw:['roi','return on investment','pipe per dollar','best channel','worst channel','all channel cost','channel roi','cost efficiency','spend efficiency'], id:'r10' },
-  { kw:['on track','kr target','h1 target','okr','goal','progress vs target','are we on track','hitting target','target tracker'], id:'r15' },
+  { kw:['on track','kr target','h1 target','okr','goal','progress vs target','are we on track','hitting target','target tracker','pipe over cost','pipeline over cost','pipe vs cost','pipeline vs cost','pipe over cost ratio','pipeline over cost ratio','buy over cost','pipe over cost ytd','pipeline ytd','presentation dashboard','kr presentation','kr tracking','okr tracking','are we hitting','h1 progress','weekly cumulative','kr targets'], id:'r15' },
   { kw:['how are we doing','summary','biweekly','weekly summary','overview','marketing overview','all channels','channel mix'], id:'r01' },
   { kw:['28 day','last 28','rolling kpi','last month','rolling 28','last 28 days','month over month','recent kpi'], id:'r14' },
   { kw:['how many mql','mql count','mql this week','mql volume','mql trend','mql by week','weekly mql'], id:'r05' },
