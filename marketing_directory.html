@@ -1228,16 +1228,12 @@
     <div class="pw-divider"></div>
 
     <p class="pw-welcome">
-      Answer the question below to get in.
-    </p>
-
-    <p style="font-size:15px;font-weight:600;color:#1e3a8a;margin-bottom:16px;line-height:1.5;">
-      The San Francisco office's favorite good girl has a product marketer mom. What's her name? 🐶
+      Enter your email to get in. You'll only need to do this once.
     </p>
 
     <div class="pw-input-wrap">
-      <input class="pw-input" id="gateInput" type="text"
-        placeholder="Type your answer..."
+      <input class="pw-input" id="gateInput" type="email"
+        
         onkeydown="if(event.key==='Enter') checkGatePassword()">
     </div>
     <div class="pw-error-msg" id="gateError"></div>
@@ -3501,26 +3497,24 @@ document.getElementById('adminModalBg').addEventListener('click', e => {
 });
 // ─── PASSWORD GATE ────────────────────────────────────────────────────────────
 const PW_KEY = 'hexplorer_auth_v2';
-const CORRECT_PW = 'nori';
 function checkGatePassword() {
   const input = document.getElementById('gateInput');
   const errEl = document.getElementById('gateError');
   const val = input.value.trim().toLowerCase();
-  if (val === CORRECT_PW) {
-    sessionStorage.setItem(PW_KEY, '1');
+  if (val.endsWith('@workstream.is')) {
+    localStorage.setItem(PW_KEY, val);
     const gate = document.getElementById('pwGate');
     gate.classList.add('hidden');
     setTimeout(() => gate.remove(), 420);
   } else {
     input.classList.add('pw-error');
-    errEl.textContent = 'Not quite — try again 🐾';
-    input.value = '';
+    errEl.textContent = 'Please enter a valid email address.';
     input.focus();
     setTimeout(() => input.classList.remove('pw-error'), 500);
   }
 }
 (function() {
-  if (sessionStorage.getItem(PW_KEY) === '1') {
+  if (localStorage.getItem(PW_KEY) && localStorage.getItem(PW_KEY).endsWith('@workstream.is')) {
     const gate = document.getElementById('pwGate');
     if (gate) gate.remove();
   } else {
