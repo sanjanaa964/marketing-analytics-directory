@@ -1480,7 +1480,7 @@ const BASE_REPORTS = [
   // ── DIGEST ────────────────────────────────────────────────────────────
   {
     id:'r01', area:'DIGEST',
-    title:'All Channels Biweekly', hexTitle:'Digest | Biweekly Marketing Report | What happened & what\'s next?',
+    title:'All Channels Bi-Weekly', hexTitle:'Digest | Biweekly Marketing Report | What happened & what\'s next?',
     subtitle:'Full funnel: MQL, pipeline, won ARR, efficiency — every channel in one view',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/019b28a3-0678-7335-aa78-a466e0fb5821/latest',
     popular:false, attrType:'both',
@@ -1489,7 +1489,7 @@ const BASE_REPORTS = [
   },
   {
     id:'r14', area:'DIGEST',
-    title:'Rolling 28-Day KPIs', hexTitle:'Digest | Pipeline Review Session | 28d KPIs',
+    title:'28-Day Rolling KPI Snapshot', hexTitle:'Digest | Pipeline Review Session | 28d KPIs',
     subtitle:'28-day snapshot vs prior 28 days: MQL, pipeline, conversion, SDR, franchise',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/019b2e45-08b8-700c-ba92-e5bec5b0ba87/latest',
     popular:false, attrType:'first',
@@ -1498,7 +1498,7 @@ const BASE_REPORTS = [
   },
   {
     id:'r15', area:'DIGEST',
-    title:'KR Target Tracking', hexTitle:'Digest | MQLs/Pipe/WON vs KR Targets [Weekly] | Are we on track?',
+    title:'Our KR Tracking', hexTitle:'Digest | MQLs/Pipe/WON vs KR Targets [Weekly] | Are we on track?',
     subtitle:'H1 2026 progress vs OKR targets, weekly cumulative, by channel',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/019be9dd-fd1e-766d-be9c-99f0bc89d663/latest',
     popular:false, attrType:'first',
@@ -1538,8 +1538,8 @@ const BASE_REPORTS = [
   },
   {
     id:'r09', area:'PIPE',
-    title:'Pipeline by Event / Campaign Entity', hexTitle:'SRC | Attr + Infl Pipe & Won by Entity | Which events, webinars, .. drive pipeline?',
-    subtitle:'Entity-level: which specific events and campaigns drove attributed + influenced pipeline',
+    title:'The Entity Dashboard', hexTitle:'SRC | Attr + Infl Pipe & Won by Entity | Which events, webinars, .. drive pipeline?',
+    subtitle:'Which events, webinars, and campaigns drove pipeline — entity-level attribution deep dive',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/019c53b2-72e9-7007-9899-e97bce6a9540/latest',
     popular:false, attrType:'both',
     filters:'Date, Channel, Entity, Keyword',
@@ -1596,7 +1596,7 @@ const BASE_REPORTS = [
   // ── COST ──────────────────────────────────────────────────────────────
   {
     id:'r10', area:'COST',
-    title:'Full ROI by Channel', hexTitle:'Src | Attr/Infl Pipe, Won, Cost, ROI by Channel | What\'s the ROI by channel?',
+    title:'Kera\'s Efficiency Report', hexTitle:'Src | Attr/Infl Pipe, Won, Cost, ROI by Channel | What\'s the ROI by channel?',
     subtitle:'Attributed + influenced pipe, won ARR, MQLs, costs, and ROI — all channels and campaigns',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/019bed7f-fac0-7000-9596-bb6e6d5dcf93/latest',
     popular:true, attrType:'both',
@@ -1605,7 +1605,7 @@ const BASE_REPORTS = [
   },
   {
     id:'r03', area:'COST',
-    title:'Channel Scorecard 2025', hexTitle:'SRC | Cross-Channel KPI Summary | Pipeline, Cost & ROI by Channel | How is marketing performing?',
+    title:'Channel Scorecard', hexTitle:'SRC | Cross-Channel KPI Summary | Pipeline, Cost & ROI by Channel | How is marketing performing?',
     subtitle:'2025 annual view: MQL volume, spend, cost per MQL, and pipeline ROI by channel',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/hex/SRC-Cross-Channel-KPI-Summary-Pipeline-Cost-ROI-by-Channel-How-is-marketing-performing-032wBXNeSdn1nGo4PAMc06/draft/logic',
     popular:false, attrType:'first',
@@ -1667,12 +1667,13 @@ const BASE_REPORTS = [
   // ── PIPE (additional) ─────────────────────────────────────────────────
   {
     id:'r24', area:'PIPE',
-    title:'Pipeline & Won by Source', hexTitle:'Src | Pipe & Won | Graphs w full breakdown',
-    subtitle:'Visual breakdown of attributed pipeline and won ARR by lead source — charts with full detail',
+    title:'Pipe & Won by All Categories',
+    hexTitle:'SRC | Pipe & Won | Graphs w Full Breakdown',
+    subtitle:'Pipe and won graphs broken down by attribution category, channel, entity, tactic, campaign type — the most complete attribution view we have',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/Src-Pipe-Won-Graphs-w-full-breakdown-032MOryTMDuTNnMusBeZx4/latest',
-    popular:false, attrType:'first',
-    filters:'Source, Date',
-    tags:['pipe','pipeline','won','source','src','graphs','charts','breakdown','visual','lead source','won arr','by source','pipeline by source'],
+    popular:false, attrType:'attributed',
+    filters:'Attribution Category, Channel, Entity, Tactic, Campaign Type, Op Type, Product Category, Start Month, End Month, Marketing Toggle',
+    tags:['attribution','attribution category','marketing new business','marketing upsell','marketing expansion','unattributed','marketing only','marketing account sourced','pipe graphs','won graphs','full breakdown','op type','campaign type','attribution deep dive','all attribution','account source','source','src','lead source','lei','categorical'],
   },
   {
     id:'r25', area:'MQL',
@@ -1694,6 +1695,7 @@ const BASE_REPORTS = [
     filters:'Month, Segment',
     tags:['arr','revenue','fy26','target','actual','franchise sales','cfa','pa inbound','corporate partnerships','ending arr','cumulative arr','segment','revenue target','fy2026','bridge','monthly'],
   },
+
 
 ]; // END BASE_REPORTS
 
@@ -1942,6 +1944,7 @@ function filteredReports() {
     if (!q) return true;
     return r.title.toLowerCase().includes(q)
       || r.subtitle.toLowerCase().includes(q)
+      || (r.hexTitle && r.hexTitle.toLowerCase().includes(q))
       || r.area.toLowerCase().includes(q)
       || r.tags.some(t => t.includes(q) || q.split(' ').some(w => w.length > 2 && t.includes(w)))
       || (REPORT_DETAILS[r.id] && REPORT_DETAILS[r.id].questions.some(qt => qt.toLowerCase().includes(q)));
@@ -2104,39 +2107,60 @@ document.getElementById('globalFileInput').addEventListener('change', function()
 const REPORT_DETAILS = {
   'r01': {
     questions: [
-      'How is marketing performing overall this week?',
-      'Which channels drove the most MQLs and pipeline?',
-      'Are we tracking toward H1 targets?',
-      'What\'s the current win rate and pipeline health?'
+      'What did each channel owner report this bi-week?',
+      'How is pipeline trending by channel, month by month?',
+      'What are MQL volumes by channel — T1 vs T2 split?',
+      'What is the MQL to SQO conversion rate by month?',
+      'How many days does it take to go from MQL to SQO (median and 90th percentile)?',
+      'What are won counts and amounts by channel (marketing-sourced)?',
+      'What is the cost per MQL, cost per opportunity, and pipeline per $1 by channel?',
+      'Which specific campaigns drove opportunities? (deep dive table)',
+      'What is the opportunity breakdown by product — Hiring, Payroll, Team Management?'
     ],
-    breakdowns: ['Channel', 'Segment', 'Week', 'Month', 'GTM Role'],
-    timeRange: 'Rolling biweekly, updated each Monday',
-    charts: ['Scorecards', 'Line trend', 'Bar', 'Summary table'],
-    bestFor: 'Leadership syncs, biweekly marketing team reviews, exec updates'
+    breakdowns: ['Channel', 'Product (Hiring / Payroll / Team Management)', 'Tier (T1 / T2)', 'Month', 'Entity (for Events tab)', 'Channel owner tab (Bastian / Events / PMM / Lifecycle / etc.)'],
+    timeRange: 'Bi-weekly cadence; pipeline and MQL data by month; current month incomplete — use prior month for 90th percentile stats',
+    charts: ['Text updates per channel owner', 'Pipeline count + amount by channel/month', 'Won count + amount by channel', 'Weekly MQL by channel (T1/T2)', 'Lead funnel conversion table (MQL→SQO rates, median + 90th pct days)', 'Cost per MQL / cost per opp / pipeline per $1', 'Deep dive table (filter by campaign/channel/date)', 'Exec summary view', 'Upcoming events calendar'],
+    bestFor: 'Bi-weekly marketing all-hands, exec review, channel owner accountability, lead funnel health check, campaign-level pipeline attribution'
   },
   'r02': {
     questions: [
       'How is a specific channel performing on MQLs and pipeline?',
-      'What\'s the ROI of this channel vs. others?',
-      'How does performance compare month over month?',
-      'What\'s the cost per MQL for this channel?'
+      'What is the cost per MQL for this channel month over month?',
+      'What is the influenced and attributed pipeline for this channel?',
+      'How is pipeline per dollar (pipe per cost) trending for this channel?',
+      'What campaigns rolled up to this channel drove the most pipeline?',
+      'What do the MQL and op detail tables show for this channel?',
+      'How does this channel perform across product categories (Hiring, Payroll, T&M)?'
     ],
-    breakdowns: ['Individual channel', 'Tier (T1/T2)', 'Week', 'Month', 'Segment'],
-    timeRange: 'Weekly cadence, trailing 12 months available',
-    charts: ['Line', 'Bar', 'Scorecard KPIs', 'Funnel stages'],
-    bestFor: 'Channel owners doing weekly performance reviews, budget justification'
+    breakdowns: ['Channel (filter — select one channel to see its full performance view)', 'Up category', 'Product category (Hiring, Payroll, T&M)', 'Time category (monthly, quarterly)'],
+    timeRange: 'Month-over-month KPI table, cohorted by calendar month — current month may be partial',
+    charts: [
+      'KPI table (cohorted by month): influence pipe, influence one, influence revenue per cost, attributed pipe, cost attributed one, cost per MQL — with current month + MoM %',
+      'MQL detail table',
+      'Op detail table',
+      'Campaign roll-up table',
+      'Entity snapshot'
+    ],
+    bestFor: 'This is the report that feeds the weekly Monday Slack channel reports — when you filter to a specific channel, you see exactly what goes into that channel\'s Slack update. Come here to debug what you see in Slack or to deep-dive a single channel\'s performance.'
   },
   'r03': {
     questions: [
-      'How did we perform vs. last year across all channels?',
-      'What\'s our year-over-year MQL and pipeline growth?',
-      'How has cost per MQL trended annually?',
-      'Which channels improved or declined the most YoY?'
+      'How are all channels performing vs. target this month and quarter?',
+      'What is the month-to-date (MTD) performance for each channel?',
+      'What is the quarter-to-date (QTD) performance for each channel?',
+      'What is the run rate and projected end-of-month/quarter for each channel?',
+      'How does current month performance compare to current quarter?',
+      'Where can I see all channels in a single view with efficiency metrics?'
     ],
-    breakdowns: ['Channel', 'Fiscal year', 'Segment', 'Quarter'],
-    timeRange: 'Full fiscal year; YoY comparison to prior year',
-    charts: ['Bar (YoY)', 'Line trend', 'Summary table', 'Variance column'],
-    bestFor: 'Annual planning cycles, board prep, exec QBRs, investor reporting'
+    breakdowns: ['All channels in one view', 'MTD (month-to-date) tab', 'QTD (quarter-to-date) tab', 'Current month tab', 'Current quarter tab', 'Run rate projection'],
+    timeRange: 'Current month and current quarter — tabs for MTD, QTD, run rate, current month, current quarter. Also exists as an Excel/spreadsheet version.',
+    charts: [
+      'All-channel scorecard table with MTD actuals',
+      'All-channel scorecard table with QTD actuals',
+      'Run rate projections per channel',
+      'Current month and current quarter views'
+    ],
+    bestFor: 'Seeing every channel at once in a clean scorecard format — MTD vs. QTD vs. run rate. This is the report that also lives in Excel. Use it for a high-level pulse check across all channels without drilling into any single one.'
   },
   'r04': {
     questions: [
@@ -2152,15 +2176,27 @@ const REPORT_DETAILS = {
   },
   'r05': {
     questions: [
-      'How many MQLs did we generate this week?',
-      'What\'s the breakdown by tier (T1 vs. T2)?',
-      'What\'s the total account value of this week\'s MQLs?',
-      'Which channels are driving MQL volume right now?'
+      'How many MQLs did we generate, and what is their total account value?',
+      'What percentage of MQLs have a lead score (lead scoring coverage)?',
+      'How does MQL volume break down by channel, tier (T1 vs T2), and week?',
+      'What is the weekly MQL value in dollars by channel?',
+      'Who are the specific people (person-level table) that became MQLs?',
+      'Which campaigns (campaign-level table) drove these MQLs?',
+      'How does T1 MQL volume compare to T2 MQL volume by channel?'
     ],
-    breakdowns: ['Channel', 'Tier (T1/T2)', 'Account value range', 'Week', 'Segment'],
-    timeRange: 'Weekly, trailing 13 weeks',
-    charts: ['Scorecard KPIs', 'Stacked bar by channel', 'Trend line'],
-    bestFor: 'Monday standups, weekly MQL reporting, SDR/marketing alignment'
+    breakdowns: ['Tier (T1 vs T2)', 'Channel', 'MQL date range (start and end date filter)', 'Weekly time view'],
+    timeRange: 'Filterable by MQL start date and MQL end date — adjusting these changes the lead scoring monitor percentage',
+    charts: [
+      'Lead scoring monitor — percentage of MQLs in view that have a lead score (coverage gauge)',
+      'MQL volume by channel',
+      'MQL volume by tier (T1 vs T2)',
+      'Tier 1 MQL by channel',
+      'Tier 2 MQL by channel',
+      'Weekly MQL value in dollars by channel',
+      'Person-level MQL detail table',
+      'Campaign-level MQL attribution table'
+    ],
+    bestFor: 'Understanding MQL volume, quality (T1 vs T2), and lead scoring health. The lead scoring monitor tells you what % of MQLs actually have a score — if this drops, it signals a scoring pipeline issue. Person and campaign tables let you see exactly who came in and which campaigns drove them.'
   },
   'r06': {
     questions: [
@@ -2176,15 +2212,18 @@ const REPORT_DETAILS = {
   },
   'r07': {
     questions: [
-      'Who owns the pipeline — marketing, SDR, or AE?',
-      'Which tactics are driving the most pipeline dollars?',
-      'How is owned pipeline distributed across GTM roles?',
-      'What\'s marketing-sourced vs. marketing-influenced pipe?'
+      'How much pipeline is owned by marketing vs. AE vs. SDR?',
+      'What is the op count and op amount broken down by GTM owner?',
+      'How does pipeline split across GTM roles by tactic?',
+      'What are the GTM owner definitions used in this report?',
+      'How does pipeline look when filtered by year (2024, 2025, 2026)?',
+      'What does pipeline look like broken down by month vs. quarter vs. year?',
+      'Which tactic is driving the most pipeline for a given GTM owner?'
     ],
-    breakdowns: ['GTM owner', 'Tactic', 'Segment', 'Month', 'AE / SDR'],
-    timeRange: 'Monthly, rolling quarter, fiscal year',
-    charts: ['Stacked bar by role', 'Bar by tactic', 'Attribution table'],
-    bestFor: 'GTM alignment meetings, pipeline attribution debates, marketing ROI reporting'
+    breakdowns: ['GTM owner (Marketing / AE / SDR / CS)', 'Channel', 'Tactic', 'Year (2024, 2025, 2026)', 'Time granularity (month, quarter, year)'],
+    timeRange: 'Multi-year — filterable by year (2024, 2025, 2026 etc.) and time granularity (monthly, quarterly, annual)',
+    charts: ['Op count by GTM owner', 'Op amount by GTM owner', 'Pipe count by channel (bottom graph)', 'Pipe amount by channel (bottom graph)', 'GTM owner definitions table/glossary'],
+    bestFor: 'Understanding who sources pipeline — marketing vs. sales vs. SDR — and which tactics and channels are driving it. Includes GTM owner definitions for clarity on attribution rules.'
   },
   'r08': {
     questions: [
@@ -2200,27 +2239,37 @@ const REPORT_DETAILS = {
   },
   'r09': {
     questions: [
-      'Which event or campaign drove the most pipeline?',
-      'What\'s the pipeline attributed to a specific event?',
-      'How does webinar pipeline compare to conference pipeline?',
-      'What\'s the ROI of our event spend?'
+      'Which events and campaigns drove attributed and influenced pipeline?',
+      'What pipeline is attributed or influenced by a specific entity (event, webinar, conference)?',
+      'How does each campaign activation connect to an opportunity?',
+      'What is the SQO date, status, and pipeline amount for each op linked to an entity?',
+      'Which entities have the highest percentage of open vs. closed opportunities?',
+      'How does pipeline attribution break down at the individual op level by entity?'
     ],
-    breakdowns: ['Event name', 'Campaign type', 'Segment', 'Quarter', 'Influenced vs. sourced'],
-    timeRange: 'Event-based, trailing 12 months',
-    charts: ['Ranked bar', 'Attribution table', 'Waterfall by event'],
-    bestFor: 'Event ROI analysis, campaign attribution reviews, field marketing planning'
+    breakdowns: ['Entity (events, webinars, conferences, etc. — sections the table rows)', 'Campaign activation', 'Account', 'Op owner', 'Marketing-only toggle (excludes sales, outbound, search entities)', 'Specific entities filter', 'Keyword search for entities'],
+    timeRange: 'Filterable by SQL date range (start and end date) — applies to campaign dates or op dates',
+    charts: [
+      'Entity-sectioned table with columns: entity, campaign activation, account, op ID, op owner, campaign start dates, status, SQO date, pipe attributed, influence, one attributed, one influenced, open, influence %, % of close, % of open'
+    ],
+    bestFor: 'Deep-diving into which specific events, webinars, and campaigns drove pipeline at the individual opportunity level. Use the marketing-only toggle to exclude sales and outbound noise. Rows are grouped by entity — great for post-event pipeline analysis.'
   },
   'r10': {
     questions: [
-      'Which channel has the best pipeline per dollar spent?',
-      'Where should we shift budget for maximum ROI?',
-      'What\'s cost per MQL by channel, and how is it trending?',
-      'Which channels are most and least efficient right now?'
+      'What is the ROI by channel — attributed and influenced?',
+      'What is cost per attributed pipeline vs. cost per influenced pipeline by channel?',
+      'How does attributed ROI compare to influenced ROI across channels?',
+      'Which channels have the best pipeline per dollar spent?',
+      'What is the average deal size (attributed vs. influenced) by channel?',
+      'Which specific campaigns have the best ROI?',
+      'How do metrics change when filtered to a specific op created date range?'
     ],
-    breakdowns: ['Channel', 'Segment', 'Quarter', 'Fiscal year', 'Spend tier'],
-    timeRange: 'Quarterly and annual; rolling 4 quarters available',
-    charts: ['ROI bar chart', 'Cost per MQL trend', 'Efficiency scatter', 'Summary table'],
-    bestFor: 'Budget allocation decisions, quarterly business reviews, CMO reporting'
+    breakdowns: ['Channel (top table — one row per channel)', 'Campaign (bottom table — one row per campaign)', 'Op created date range (start + end filter)'],
+    timeRange: 'Filterable by op created date — set start date and end date for opportunity created date',
+    charts: [
+      'Channel table: influence tops, attributed pipe, influence pipe, influence one cost, attributed pipe per cost, attributed ROI, influenced pipe per cost, influenced ROI, avg job size attributed, avg job size influenced',
+      'Campaign table: same metrics broken down at campaign level'
+    ],
+    bestFor: 'Cross-channel ROI analysis — Kera uses this regularly. Go here to compare attributed vs. influenced pipeline efficiency across channels and campaigns. Best for budget allocation decisions and proving channel ROI.'
   },
   'r11': {
     questions: [
@@ -2236,15 +2285,16 @@ const REPORT_DETAILS = {
   },
   'r12': {
     questions: [
-      'How long does it take from MQL to pipeline on average?',
-      'Where in the funnel are deals getting stuck?',
-      'How is velocity trending month over month?',
-      'Which channels or segments convert fastest?'
+      'How long does it take for an MQL account to create pipeline?',
+      'What percentage of MQL cohorts became pipeline within the first quarter?',
+      'How many accounts in each MQL cohort month eventually created pipeline?',
+      'Which quarter (Q1–Q10) sees the highest rate of pipeline conversion?',
+      'How does MQL-to-pipeline velocity compare across cohort months?'
     ],
-    breakdowns: ['Channel', 'Tier', 'AE / SDR', 'Month', 'Segment'],
-    timeRange: 'Monthly, trailing 12 months',
-    charts: ['Duration bar', 'Trend line (velocity)', 'Funnel stage breakdown'],
-    bestFor: 'SDR/AE efficiency reviews, funnel optimization, sales cycle analysis'
+    breakdowns: ['Cohort month (rows)', 'Q1–Q10 columns (% pipelined per quarter after MQL date)', 'Number of accounts per cohort'],
+    timeRange: 'Historical cohort view — each row is a cohort month; columns show % pipelined in Q1, Q2 ... Q10 after first MQL engagement',
+    charts: ['Pivot/cohort table: cohort month x Q1–Q10 columns showing % pipelined', 'Account count per cohort row'],
+    bestFor: 'Understanding pipeline velocity from first MQL engagement — only includes accounts that both had an MQL AND eventually created pipeline. Use this to benchmark how long the sales motion takes by cohort.'
   },
   'r13': {
     questions: [
@@ -2272,15 +2322,24 @@ const REPORT_DETAILS = {
   },
   'r15': {
     questions: [
-      'Are we on track to hit our H1 MQL and pipeline targets?',
-      'What\'s the gap to goal by channel?',
-      'Which channels are over or under target right now?',
-      'What\'s our projected H1 landing based on current pace?'
+      'Are we on track to hit our H1 MQL, pipeline, and won targets?',
+      'What is the cumulative H1 pipeline ARR for events only?',
+      'What is the cumulative H1 pipeline and ARR for marketing excluding events?',
+      'What is total closed one (won ARR) YTD 2026 vs. target?',
+      'What is total pipeline YTD vs. target?',
+      'What is the YTD 2026 pipe over cost ratio vs. 2025 H1?',
+      'How does actual weekly cumulative progress compare to the KR target line?'
     ],
-    breakdowns: ['Channel', 'OKR metric', 'Week', 'Segment'],
-    timeRange: 'H1 FY2026 (January – June 2026), weekly updates',
-    charts: ['Progress vs. target (gauge)', 'Bullet chart', 'Line (actual vs. target)'],
-    bestFor: 'OKR reviews, leadership target updates, weekly goal-tracking standups'
+    breakdowns: ['H1 events only pipeline', 'H1 marketing pipeline (excluding events)', 'Total closed won', 'Total pipeline', 'Pipe over cost ratio (YTD 2026 vs 2025 H1 comparison)'],
+    timeRange: 'H1 2026 — weekly cumulative view; YTD for pipe over cost ratio; comparison to 2025 H1 for benchmarking',
+    charts: [
+      'H1 pipeline ARR — events only (cumulative weekly)',
+      'H1 pipeline and ARR — marketing excluding events (cumulative weekly)',
+      'Total closed one / won ARR (cumulative)',
+      'Total pipeline (cumulative)',
+      'YTD 2026 pipe over cost ratio vs. 2025 H1 (same metric)'
+    ],
+    bestFor: 'Weekly OKR tracking — are we hitting H1 targets? The pipe over cost ratio YTD is the efficiency metric here. Use this for exec check-ins, weekly reviews, and to answer "are we on track?" for any H1 marketing KR.'
   },
   'r17': {
     questions: [
@@ -2320,54 +2379,68 @@ const REPORT_DETAILS = {
   },
   'r21': {
     questions: [
-      'What\'s our projected year-end ARR under different scenarios?',
-      'How does spend sensitivity affect the ARR projection?',
-      'What are the bull, base, and bear case landing points?',
-      'What inputs would need to change to hit our $29M target?'
+      'How does our annual marketing spend affect end-of-year ARR?',
+      'What is the projected 2026 ARR if we adjust total marketing spend?',
+      'How is new business ARR trending month by month vs existing ARR?',
+      'Are we on track to hit the $29M ARR target for 2026?',
+      'What does the monthly ARR forecast look like broken into new business vs retained ARR?'
     ],
-    breakdowns: ['Scenario (base / bull / bear)', 'Spend level', 'Segment', 'Month'],
-    timeRange: 'FY2026 full-year projection, monthly cadence',
-    charts: ['Scenario comparison bar', 'Waterfall', 'Sensitivity line', 'ARR bridge'],
-    bestFor: 'Board prep, financial planning, sensitivity analysis, CFO / CMO alignment'
-  },
-  'r24': {
-    questions: [
-      'Which lead source is driving the most pipeline?',
-      'How does won ARR break down by source?',
-      'What\'s the pipe-to-won conversion rate by source?',
-      'Are organic, paid, or partner sources more efficient?'
-    ],
-    breakdowns: ['Lead source', 'Segment', 'Quarter', 'Won vs. open pipe'],
-    timeRange: 'Quarterly, trailing 4 quarters',
-    charts: ['Ranked bar by source', 'Stacked bar (won vs. pipe)', 'Source comparison table'],
-    bestFor: 'Source attribution analysis, channel strategy, inbound vs. outbound mix decisions'
-  },
-  'r25': {
-    questions: [
-      'Which campaigns touched MQLs before they converted?',
-      'What\'s the multi-touch attribution breakdown by campaign?',
-      'How many touches does it typically take to convert?',
-      'Which campaigns have first-touch vs. last-touch influence?'
-    ],
-    breakdowns: ['Campaign', 'Channel', 'MQL date', 'Touch type (first / mid / last)'],
-    timeRange: 'Last 90 days, monthly refresh',
-    charts: ['Multi-touch attribution table', 'Stacked bar (touch volume)', 'Funnel'],
-    bestFor: 'Campaign attribution, multi-touch analysis, content and nurture program evaluation'
+    breakdowns: ['New business ARR (monthly)', 'Existing ARR (monthly)', 'Annual marketing spend input (adjustable filter in $M)', 'Month (Jan–Dec 2026)'],
+    timeRange: 'FY2026 full-year projection, monthly cadence — forecast updates dynamically based on spend input',
+    charts: ['2026 ARR forecast line chart (y-axis: ARR in $M, x-axis: month)', 'Stacked area: New business ARR + Existing ARR', 'Target reference line at $29M'],
+    bestFor: 'Scenario planning, board prep, understanding how marketing investment translates to year-end ARR, adjusting spend assumptions to model outcomes'
   },
   'r26': {
     questions: [
-      'What\'s our FY26 ending ARR target by segment, and where are we tracking?',
-      'What\'s the current gap to the $29M total ARR goal?',
-      'How is Franchise Sales ARR trending vs. its $7.5M target?',
-      'Which segment is furthest ahead or behind on its 2026 target?'
+      'What is the total ending ARR for FY2026 vs. the $29M target?',
+      'How is each segment (Franchise Sales, CFA Net Incremental, Product Advocate, Corporate Partnerships) tracking toward the FY2026 target?',
+      'What is the cumulative ARR contribution from Franchise Sales (Austin\'s team)?',
+      'How much net incremental ARR has Chick-fil-A contributed?',
+      'What is product advocate inbound ARR and corporate partnerships ARR?',
+      'How much churn has occurred, and how does it affect the $29M target?',
+      'Are we on track for the $11M marketing contribution for FY2026?'
     ],
-    breakdowns: ['Segment (Franchise Sales, CFA Net, PA Inbound, Insurance Broker, Corporate)', 'Month', 'Cumulative vs. monthly'],
-    timeRange: 'FY2026 full year (Jan – Dec 2026), monthly actuals updated',
-    charts: ['KPI scorecard ($25.4M vs. $29M)', 'Line (actual vs. target by segment)', 'ARR bridge bar', 'Segment allocation donut'],
-    bestFor: 'Revenue leadership reviews, segment target tracking, board-level ARR reporting'
+    breakdowns: ['Franchise Sales (Austin\'s team)', 'Chick-fil-A net incremental ARR', 'Product advocate inbound ARR', 'Corporate partnerships ARR', 'Churn', 'FY2026 target allocation by segment'],
+    timeRange: 'FY2026 full-year — cumulative monthly graphs; actual vs. target tracked monthly against $29M ARR bridge',
+    charts: [
+      'Total ending ARR: actual vs. target ($29M FY2026 ARR bridge)',
+      'FY2026 target allocation by segment (pie/breakdown)',
+      'Franchise Sales ARR (cumulative — Austin\'s team)',
+      'Chick-fil-A net incremental ARR (cumulative)',
+      'Product advocate inbound ARR (cumulative)',
+      'Corporate partnerships ARR (cumulative)',
+      'Insurance broker ARR (cumulative)',
+      'Churn (cumulative)'
+    ],
+    bestFor: 'Company-wide ARR target tracking for Angel Joe and Bastian. This is the executive view of whether each business segment is contributing enough to reach $29M FY2026 ARR — not a marketing-specific report. Marketing\'s goal is to contribute $11M net new. Used for board prep and executive review.'
   },
+  'r24': {
+    questions: [
+      'How is pipeline and won ARR broken down by attribution category?',
+      'What is the op count and close-to-won rate by attribution category?',
+      'How does marketing new business compare to unattributed new business?',
+      'What is the cost by channel across all attribution categories?',
+      'How does pipeline look when filtered to marketing only, or marketing account sourced?',
+      'What is the difference between marketing automated only vs. marketing activated vs. truly marketing activated?',
+      'How does pipeline break down by tactic, campaign type, op type, entity, or product category?',
+      'This is the only report with marketing account sourced and all attribution categories — what does the full picture look like?'
+    ],
+    breakdowns: [
+      'Attribution category (Marketing new business, Marketing upsell, Marketing expansion, Marketing renewal, Unattributed new business, Sales new business, Sales expansion, Prospected, FTD/list upload, Attributed new business by source, etc.)',
+      'Channel', 'Entity', 'Tactic', 'Campaign type', 'Op type', 'Product category',
+      'Marketing filter: Marketing automated only / Marketing only (includes marketing account sourced) / Marketing activated only / Is truly marketing activated',
+      'Time granularity (monthly, quarterly)', 'Start month / End month'
+    ],
+    timeRange: 'Filterable by start month and end month — can be set to any range',
+    charts: [
+      'Pipeline ARR by attribution category (swappable breakdown: channel, campaign type, op type, product category)',
+      'Opportunity count by attribution category (same swappable breakdown)',
+      'Close-to-won rate by attribution category (same swappable breakdown)',
+      'Cost by channel'
+    ],
+    bestFor: 'The most complete attribution view in the entire stack — this is the only report with marketing account sourced, account source, AND all attribution categories beyond just opportunity source. Use when you need to understand the full picture of how pipeline is attributed across marketing, sales, unattributed, and every subcategory. The marketing-only toggle lets you isolate purely marketing-driven pipeline.'
+  }
 };
-
 // ─── Toggle expanded card detail ──────────────────────────────────────────────
 function toggleCardDetail(id, btn) {
   const panel = document.getElementById('cd-' + id);
@@ -2379,32 +2452,21 @@ function toggleCardDetail(id, btn) {
     ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg> See more'
     : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg> See less';
 }
-
-
-
-
-
-
 // ═══════════════════════════════════════════════════════════════════════════
 //  FOLDERS — user-created "album" collections
 // ═══════════════════════════════════════════════════════════════════════════
-
 const FOLDERS_KEY = 'ws_folders_v1';
-
 function loadFolders() {
   try { return JSON.parse(localStorage.getItem(FOLDERS_KEY)) || []; } catch { return []; }
 }
 function saveFolders(folders) {
   localStorage.setItem(FOLDERS_KEY, JSON.stringify(folders));
 }
-
 // Returns the list of folder IDs that contain this report
 function cardInAnyFolder(reportId) {
   return loadFolders().some(f => f.reports.includes(reportId));
 }
-
 let activeFolderId = null; // null = showing all/category view
-
 /* ── Sidebar folder list ── */
 function renderFolderList() {
   const folders = loadFolders();
@@ -2423,7 +2485,6 @@ function renderFolderList() {
               onclick="deleteFolder(event,'${f.id}')">✕</button>
     </div>`).join('');
 }
-
 function setActiveFolder(id) {
   activeFolderId = activeFolderId === id ? null : id;
   activeArea = 'ALL';
@@ -2432,7 +2493,6 @@ function setActiveFolder(id) {
   renderFolderList();
   renderAll();
 }
-
 function deleteFolder(e, id) {
   e.stopPropagation();
   const folders = loadFolders().filter(f => f.id !== id);
@@ -2441,10 +2501,8 @@ function deleteFolder(e, id) {
   renderFolderList();
   renderAll();
 }
-
 /* ── New folder modal ── */
 let _folderModalMode = 'create'; // 'create'
-
 function openNewFolderModal() {
   _folderModalMode = 'create';
   document.getElementById('folderModalTitle').textContent = 'New Folder';
@@ -2453,12 +2511,10 @@ function openNewFolderModal() {
   document.getElementById('folderModalBg').classList.add('open');
   setTimeout(() => document.getElementById('folderModalInput').focus(), 80);
 }
-
 function closeFolderModal(e) {
   if (e && e.target !== document.getElementById('folderModalBg')) return;
   document.getElementById('folderModalBg').classList.remove('open');
 }
-
 function confirmFolderModal() {
   const name = document.getElementById('folderModalInput').value.trim();
   if (!name) return;
@@ -2468,31 +2524,27 @@ function confirmFolderModal() {
   document.getElementById('folderModalBg').classList.remove('open');
   renderFolderList();
 }
-
 /* ── Folder picker (dropdown on each card) ── */
 let _openPickerId = null;
-
 function toggleFolderPicker(e, reportId) {
   e.stopPropagation();
   const picker = document.getElementById('fp-' + reportId);
-
   // Close any open picker
   if (_openPickerId && _openPickerId !== reportId) {
     const prev = document.getElementById('fp-' + _openPickerId);
     if (prev) prev.classList.remove('open');
   }
-
   if (picker.classList.contains('open')) {
     picker.classList.remove('open');
     _openPickerId = null;
     return;
   }
-
   // Build picker content
   const folders = loadFolders();
   if (!folders.length) {
     picker.innerHTML = `
-      <div class="fp-item fp-create" onclick="openNewFolderModal()">＋ New folder</div>`;
+      <div class="fp-item fp-create" onclick="openNewFolderModal()">
+ New folder</div>`;
   } else {
     const items = folders.map(f => {
       const has = f.reports.includes(reportId);
@@ -2502,14 +2554,13 @@ function toggleFolderPicker(e, reportId) {
               </div>`;
     }).join('');
     picker.innerHTML =
-      `<div class="fp-item fp-create" onclick="openNewFolderModal()">＋ New folder</div>
+      `<div class="fp-item fp-create" onclick="openNewFolderModal()">
+ New folder</div>
        <div class="fp-divider"></div>` + items;
   }
-
   picker.classList.add('open');
   _openPickerId = reportId;
 }
-
 // Close picker when clicking outside
 document.addEventListener('click', () => {
   if (_openPickerId) {
@@ -2518,7 +2569,6 @@ document.addEventListener('click', () => {
     _openPickerId = null;
   }
 });
-
 function toggleReportInFolder(reportId, folderId) {
   const folders = loadFolders();
   const folder = folders.find(f => f.id === folderId);
@@ -2527,20 +2577,16 @@ function toggleReportInFolder(reportId, folderId) {
   if (idx === -1) folder.reports.push(reportId);
   else folder.reports.splice(idx, 1);
   saveFolders(folders);
-
   // Refresh the picker contents in-place
   toggleFolderPicker({ stopPropagation: () => {} }, 'CLOSE');
   toggleFolderPicker({ stopPropagation: () => {} }, reportId);
-
   // Update folder button glow
   const fb = document.getElementById('fb-' + reportId);
   if (fb) fb.className = `card-folder-btn ${cardInAnyFolder(reportId) ? 'in-folder' : ''}`;
-
   // If in folder view, re-render to reflect removal
   if (activeFolderId) renderAll();
   renderFolderList();
 }
-
 /* ── Filter cards by active folder ── */
 function getVisibleReports() {
   let reports = REPORTS;
@@ -2560,21 +2606,15 @@ function getVisibleReports() {
   }
   return reports;
 }
-
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 reloadReports();   // merge BASE_REPORTS + admin edits + custom reports
 renderFolderList();
 renderAll();
-
-
-
 // ═══════════════════════════════════════════════════════════════════════════
 //  SEARCH ANALYTICS — log queries + results to localStorage
 // ═══════════════════════════════════════════════════════════════════════════
-
 const SEARCH_LOG_KEY = 'ws_search_log_v1';
 const SEARCH_LOG_MAX = 600; // rolling cap
-
 function _logSearch(query, source, hitIds) {
   const q = (query || '').trim().toLowerCase();
   if (!q || q.length < 2) return;
@@ -2586,38 +2626,31 @@ function _logSearch(query, source, hitIds) {
     localStorage.setItem(SEARCH_LOG_KEY, JSON.stringify(trimmed));
   } catch(e) { /* ignore storage errors */ }
 }
-
 function _getSearchLog() {
   try { return JSON.parse(localStorage.getItem(SEARCH_LOG_KEY)) || []; } catch { return []; }
 }
-
 function clearSearchLog() {
   if (!confirm('Clear all search analytics data?')) return;
   localStorage.removeItem(SEARCH_LOG_KEY);
   renderSearchAnalytics();
 }
-
 // ═══════════════════════════════════════════════════════════════════════════
 //  CHATBOT — floating popup report finder
 // ═══════════════════════════════════════════════════════════════════════════
-
 let cbOpen      = false;
 let cbGreeted   = false;
 let cbLastIds   = [];          // track IDs shown so "show me another" works
 let cbPendingResults = [];     // all matches from last query
-
 const CHIP_SUGGESTIONS = [
   'ROI by channel',
   'MQL volume this week',
   'Which events drove pipeline',
   'Win rate',
 ];
-
 function toggleChatbot() {
   cbOpen = !cbOpen;
   const popup = document.getElementById('chatbotPopup');
   const dot   = document.getElementById('fabDot');
-
   if (cbOpen) {
     popup.classList.add('open');
     dot.style.display = 'none';
@@ -2634,9 +2667,7 @@ function toggleChatbot() {
     popup.classList.remove('open');
   }
 }
-
 /* ---------- message builders ---------- */
-
 function _cbBotMsg(html, chipsHtml = '') {
   const wrap = document.getElementById('cbMessages');
   const row  = document.createElement('div');
@@ -2650,7 +2681,6 @@ function _cbBotMsg(html, chipsHtml = '') {
   wrap.appendChild(row);
   wrap.scrollTop = wrap.scrollHeight;
 }
-
 function _cbUserMsg(text) {
   const wrap = document.getElementById('cbMessages');
   const row  = document.createElement('div');
@@ -2659,7 +2689,6 @@ function _cbUserMsg(text) {
   wrap.appendChild(row);
   wrap.scrollTop = wrap.scrollHeight;
 }
-
 function _cbTyping() {
   const wrap = document.getElementById('cbMessages');
   const row  = document.createElement('div');
@@ -2674,12 +2703,10 @@ function _cbTyping() {
   wrap.scrollTop = wrap.scrollHeight;
   return row;
 }
-
 function _removeTyping() {
   const el = document.getElementById('cbTypingRow');
   if (el) el.remove();
 }
-
 function _buildChips(labels) {
   return labels.map(l =>
     `<button class="cb-chip" onclick="cbChip(this,'${l.replace(/'/g,"\\'")}')">
@@ -2687,47 +2714,43 @@ function _buildChips(labels) {
      </button>`
   ).join('');
 }
-
 function cbChip(btn, text) {
   // disable all chips in this row to avoid double-click
   btn.closest('.cb-chips').querySelectorAll('.cb-chip').forEach(c => c.disabled = true);
   _cbUserMsg(text);
   _cbRoute(text);
 }
-
-
 // ─── CHATBOT KEYWORD ROUTES ──────────────────────────────────────────────────
 // Maps known query patterns → specific report IDs for precise matching
 const ROUTES = [
-  { kw:['roi','return on investment','pipe per dollar','best channel','worst channel','all channel cost','channel roi','cost efficiency','spend efficiency'], id:'r10' },
-  { kw:['on track','kr target','h1 target','okr','goal','progress vs target','are we on track','hitting target','target tracker','pipe over cost','pipeline over cost','pipe vs cost','pipeline vs cost','pipe over cost ratio','pipeline over cost ratio','buy over cost','pipe over cost ytd','pipeline ytd','presentation dashboard','kr presentation','kr tracking','okr tracking','are we hitting','h1 progress','weekly cumulative','kr targets'], id:'r15' },
-  { kw:['how are we doing','summary','biweekly','weekly summary','overview','marketing overview','all channels','channel mix'], id:'r01' },
+  { kw:['roi','return on investment','pipe per dollar','best channel','worst channel','all channel cost','channel roi','cost roi','src roi','roi by channel','kera report','attributed pipe roi','influenced pipe roi','influence one cost','attributed roi','influenced roi','op created date filter','campaign table','channel table two tables','cost per mql all channels','average job size','attributed job size','influenced job size','pipeline roi all channels','all channel roi'], id:'r10' },
+  { kw:['on track','kr target','h1 target','okr','goal','progress vs target','are we on track','hitting target','target tracker','pipe over cost','pipeline over cost','pipe vs cost','pipeline vs cost','pipe over cost ratio','pipeline over cost ratio','buy over cost','pipe over cost ytd','pipeline ytd','presentation dashboard','kr presentation','kr tracking','okr tracking','are we hitting','h1 progress','weekly cumulative','kr targets','digest mql pipe','digest kr targets','h1 pipeline events','h1 pipeline marketing','total closed one','total pipeline ytd','ytd pipe over cost','pipe cost ratio ytd','weekly cumulative graphs','kr targets weekly','mql pipe one vs target','our kr tracking','our kr targets'], id:'r15' },
+  { kw:['how are we doing','summary','biweekly','bi-weekly','weekly summary','overview','marketing overview','all channels','channel mix','all channels biweekly','biweekly report','biweekly update','channel update','channel owner','marketing update','marketing general','channel digest','biweekly marketing','pipeline by channel','won by channel','mql by channel','tier 1 mql','tier 2 mql','t1 mql','t2 mql','lead funnel','mql to sqo','cost per mql by channel','cost per opportunity','pipeline per dollar','channel owner update','bastian','paid media growth','executive view','exec view','deep dive table','campaign sql','opportunity by product','hiring opportunity','payroll opportunity','team management opportunity','efficiency metrics','channel performance','biweekly digest','won count','won amount'], id:'r01' },
   { kw:['28 day','last 28','rolling kpi','last month','rolling 28','last 28 days','month over month','recent kpi'], id:'r14' },
-  { kw:['how many mql','mql count','mql this week','mql volume','mql trend','mql by week','weekly mql'], id:'r05' },
-  { kw:['which event','which webinar','which campaign drove','event pipeline','campaign entity','event roi','webinar pipeline'], id:'r09' },
+  { kw:['how many mql','mql count','mql this week','mql volume','mql trend','mql by week','weekly mql','src mql count','mql count and value','mql value','lead scoring','lead score coverage','mql scoring','t1 mql count','t2 mql count','tier 1 mql','tier 2 mql','mql by tier','weekly mql value in dollars','mql by channel','mql person table','person level mql','campaign level mql','lead scoring monitor','mql coverage percentage','mql start date','mql end date'], id:'r05' },
+  { kw:['which event','which webinar','which campaign drove','event pipeline','campaign entity','event roi','webinar pipeline','entity pipeline','by entity','entity report','src entity','influence by entity','attribution by entity','entity funnel','multi channel pipeline','marketing only toggle','specific entity','entity filter','entity table','op by entity','campaign activation','entity analysis','entity level','entity snapshot','webinar vs conference','events vs webinars'], id:'r09' },
   { kw:['form fill','demo request','inbound lead','form fills','inbound','demo requests','web leads'], id:'r08' },
   { kw:['win rate','pipe to won','close rate','win loss','won deals','closed won'], id:'r17' },
-  { kw:['how long','duration','velocity','days to convert','time to convert','speed','mql to pipe time','mql velocity'], id:'r12' },
+  { kw:['how long','duration','velocity','days to convert','time to convert','speed','mql to pipe time','mql velocity','mql to pipe duration','cohort duration','pipe duration','time from mql to pipeline','days mql to op','mql cohort','cohort view','cohort table','q1 to q10','quarter pipelined','first engagement to first op','how long accounts become pipeline','mql pipeline duration'], id:'r12' },
   { kw:['mql cohort','mql conversion rate','cohort conversion','cohort','mql to pipeline rate'], id:'r04' },
-  { kw:['single channel','one channel','deep dive','channel deep dive','channel breakdown','channel focus'], id:'r02' },
-  { kw:['gtm owner','gtm role','marketing owned','by tactic','tactic breakdown','by owner','who owns pipe'], id:'r07' },
+  { kw:['single channel','one channel','deep dive','channel deep dive','channel breakdown','channel focus','src channel performance','channel performance','channel kpi','how is this channel performing','channel mql','channel pipe','channel efficiency','slack channel report','weekly slack report','monday marketing report','channel efficiency metrics','mql detail','op detail table','campaign rollup','entity snapshot','channel drill down','up category','product category','cost per mql trend','pipe per cost channel','attributed pipe channel','influenced pipe channel','channel health','channel scorecard single','single channel scorecard'], id:'r02' },
+  { kw:['gtm owner','gtm role','marketing owned','by tactic','tactic breakdown','by owner','who owns pipe','source pipe by gtm owner','gtm owner definitions','op count by owner','op amount by owner','pipeline by owner','pipeline by tactic','tactic filter','year filter pipe','gtm definitions','gtm glossary','pipe by gtm','pipe by channel gtm','what is gtm owner','gtm channel breakdown'], id:'r07' },
   { kw:['by product','hiring pipeline','payroll pipe','product revenue','product segment','revenue by product'], id:'r13' },
   { kw:['nps','advocate','happy customer','referral outreach','customer satisfaction','promoter','csm outreach'], id:'r11' },
-  { kw:['arr forecast','projected arr','eoy arr','spend sensitivity','what if','forecast','arr model','projection'], id:'r21' },
+  { kw:['arr forecast','projected arr','eoy arr','spend sensitivity','what if','forecast','arr model','projection','arr forecast 2026','marketing spend arr','spend driven arr','how does spend drive arr','annual marketing spend','adjustable spend','marketing spend input','new business arr','existing arr','29 million target','29m target','arr target line','sanju model','arr model 2026','spend to arr','marketing spend model','eoy 2026 arr','marketing driven arr'], id:'r21' },
   { kw:['payroll referral','aio referral','referral rock','referral conversion','who is referring'], id:'r18' },
   { kw:['t&s adoption','chat adoption','product adoption','feature adoption','mau','active users'], id:'r20' },
   { kw:['link click','click tracker','click tracking','link tracking','click-through'], id:'r06' },
-  { kw:['annual scorecard','2025 scorecard','scorecard','year over year','yoy','year-over-year','yearly comparison','annual comparison','annual growth','growth trend','historical','historical trend','year vs year','past year','vs last year'], id:'r03' },
+  { kw:['channel scorecard','channel scorecard 2025','all channels scorecard','mtd','qtd','run rate','month to date','quarter to date','all channels one view','channel snapshot','current month channel','current quarter channel','channel performance all','channel runrate','excel channel','spreadsheet channel','all channel view'], id:'r03' },
   { kw:['by source','pipe by source','won by source','source breakdown','pipeline source','lead source','source mix'], id:'r24' },
   { kw:['mql touchpoints','touchpoints by campaign','campaign touches','mql date touches','multi-touch','touch attribution','campaign attribution'], id:'r25' },
-  { kw:['fy26 target','arr target','revenue target','ending arr','franchise sales arr','cfa arr','pa inbound arr','net new arr','arr by segment','fy2026 target','2026 revenue'], id:'r26' },
+  { kw:['fy26 target','arr target','revenue target','ending arr','franchise sales arr','cfa arr','pa inbound arr','net new arr','revenue targets','digest revenue','fy2026 revenue','angel joe','bastian revenue','company arr','11 million target','11m marketing','churn arr','corporate partnerships arr','product advocate arr','chick fil a arr','cfa net incremental','austin team arr','cumulative arr','monthly 11m','net new by channel','arr bridge','29 million arr','company wide target'], id:'r26' },
+  
   { kw:['nrr','net revenue retention','expansion','churn','retention rate','gross retention'], id:'r21' },
   { kw:['mql by channel','channel mql','which channel drives mql','channel performance','channel comparison'], id:'r02' },
   { kw:['pipeline by stage','pipe stage','stage breakdown','opp stage'], id:'r09' },
 ];
-
 /* ---------- routing ---------- */
-
 const CB_STOP_WORDS = new Set([
   'the','and','for','are','but','not','you','all','can','had','her','was','one',
   'our','out','day','get','has','him','his','how','its','let','may','now','old',
@@ -2737,13 +2760,11 @@ const CB_STOP_WORDS = new Set([
   'tell','find','look','need','help','which','about','would','could','there',
   'their','where','other','than','also','only','after','send','make',
 ]);
-
 function _cbRoute(query) {
   const typingRow = _cbTyping();
   setTimeout(() => {
     _removeTyping();
     const q = query.toLowerCase();
-
     // 0. Handle "show me more / another" intent FIRST (before any new matching)
     const moreIntent = /\b(more|another|different|else|other|next)\b/.test(q);
     if (moreIntent && cbPendingResults.length) {
@@ -2757,7 +2778,6 @@ function _cbRoute(query) {
       }
       return;
     }
-
     // 1. Check keyword ROUTES first (exact / substring match)
     let matched = [];
     for (const rule of ROUTES) {
@@ -2766,35 +2786,31 @@ function _cbRoute(query) {
         if (r && !matched.find(x => x.id === r.id)) matched.push(r);
       }
     }
-
     // 2. Fuzzy fallback — only if no keyword match
     if (!matched.length) {
       // Filter stop words and very short tokens
       const words = q.split(/\s+/).filter(w => w.length > 3 && !CB_STOP_WORDS.has(w));
-
       if (words.length > 0) {
         const scored = [];
         REPORTS.forEach(r => {
           const titleLow    = r.title.toLowerCase();
-          const haystack    = (r.title + ' ' + r.subtitle + ' ' + r.tags.join(' ')).toLowerCase();
+          const haystack    = (r.title + ' ' + r.subtitle + ' ' + (r.hexTitle || '') + ' ' + r.tags.join(' ')).toLowerCase();
           let score = 0;
           for (const w of words) {
             if (titleLow.includes(w))    score += 3;  // title match = high signal
             else if (haystack.includes(w)) score += 1;
           }
-          if (score >= 3) scored.push({ ...r, _score: score }); // minimum threshold — require at least 1 title match or 3 tag matches
+          if (score >= 3) scored.push({ ...r, _score: score }); // minimum threshold — require at least 1 title match or 3 tag 
+matches
         });
         scored.sort((a, b) => b._score - a._score);
         matched = scored.slice(0, 3);
       }
     }
-
     cbPendingResults = matched;
     cbLastIds = [];
-
     // Log the chatbot query + results
     _logSearch(query, 'chat', matched.map(r => r.id));
-
     if (!matched.length) {
       _cbBotMsg(
         "I couldn't find a report for that one. Try describing what you're measuring, like <em>\"win rate\"</em>, <em>\"MQL by channel\"</em>, or <em>\"event pipeline\"</em>.<br><br>For deeper data questions, ping <strong>@sanjuagent</strong> on Slack — she can help dig into the numbers! 💜",
@@ -2802,7 +2818,6 @@ function _cbRoute(query) {
       );
       return;
     }
-
     if (matched.length === 1) {
       cbLastIds.push(matched[0].id);
       _cbShowResults(matched, 'Here you go:');
@@ -2814,7 +2829,6 @@ function _cbRoute(query) {
     }
   }, 480);
 }
-
 function _cbShowResults(results, intro) {
   const cards = results.map(r => {
     const area   = AREAS[r.area] || {};
@@ -2824,23 +2838,20 @@ function _cbShowResults(results, intro) {
       <div class="cb-report-card" onclick="window.open('${r.hexUrl}','_blank')">
         <img src="${thumb}" alt="${r.title}" class="cb-report-thumb">
         <div class="cb-report-info">
-          <span class="cb-report-badge" style="background:${area.bg||'#E5E7EB'};color:${area.color||'#374151'}">${area.label||r.area}</span>
+          <span class="cb-report-badge" 
+style="background:${area.bg||'#E5E7EB'};color:${area.color||'#374151'}">${area.label||r.area}</span>
           <div class="cb-report-title">${r.title}</div>
           <div class="cb-report-sub">${r.subtitle}</div>
         </div>
       </div>`;
   }).join('');
-
   const hasMore = cbPendingResults.length > cbLastIds.length;
   const moreBtn = hasMore
     ? `<div style="margin-top:6px"><button class="cb-chip" onclick="cbChip(this,'show me more')">Show more results</button></div>`
     : '';
-
   _cbBotMsg(`${intro}<br>${cards}${moreBtn}`);
 }
-
 /* ---------- send ---------- */
-
 function cbSend() {
   const inp = document.getElementById('cbInput');
   const text = inp.value.trim();
@@ -2849,26 +2860,20 @@ function cbSend() {
   _cbUserMsg(text);
   _cbRoute(text);
 }
-
-
 // ═══════════════════════════════════════════════════════════════════════════
 //  ADMIN MODE — password-gated report management (Sanjanaa only)
 // ═══════════════════════════════════════════════════════════════════════════
-
 const ADMIN_PW           = 'sanjanaa';
 const ADMIN_EDITS_KEY    = 'ws_admin_edits_v1';
 const CUSTOM_REPORTS_KEY = 'ws_custom_reports_v1';
-
 let adminMode  = false;
 let adminView  = false;
 let _editingId = null;  // null = new report, string = editing existing id
-
 /* ── Data helpers ── */
 function loadAdminEdits()   { try { return JSON.parse(localStorage.getItem(ADMIN_EDITS_KEY))    || {}; } catch { return {}; } }
 function loadCustomReports(){ try { return JSON.parse(localStorage.getItem(CUSTOM_REPORTS_KEY)) || []; } catch { return []; } }
 function saveAdminEdits(e)  { localStorage.setItem(ADMIN_EDITS_KEY,    JSON.stringify(e)); }
 function saveCustomReports(r){ localStorage.setItem(CUSTOM_REPORTS_KEY, JSON.stringify(r)); }
-
 /* ── Merge BASE_REPORTS + edits + custom into REPORTS ── */
 function reloadReports() {
   const edits  = loadAdminEdits();
@@ -2882,7 +2887,6 @@ function reloadReports() {
     })
     .concat(custom);
 }
-
 /* ── Lock / unlock button ── */
 function handleLockClick() {
   if (adminMode) {
@@ -2899,7 +2903,6 @@ function handleLockClick() {
     openPwModal();
   }
 }
-
 /* ── Password modal ── */
 function openPwModal() {
   document.getElementById('pwInput').value        = '';
@@ -2925,7 +2928,6 @@ function checkPassword() {
     document.getElementById('pwInput').focus();
   }
 }
-
 /* ── Admin panel (table view) ── */
 function openAdminPanel() {
   if (!adminMode) return;
@@ -2939,7 +2941,6 @@ function openAdminPanel() {
   document.getElementById('pageSubtitle').textContent    = `${REPORTS.length} reports · admin view`;
   renderAdminTable();
 }
-
 function renderAdminTable() {
   const customIds = new Set(loadCustomReports().map(r => r.id));
   const rows = REPORTS.map(r => {
@@ -2958,26 +2959,31 @@ function renderAdminTable() {
       </td>
     </tr>`;
   }).join('');
-
   document.getElementById('adminRoot').innerHTML = `
     <div class="admin-panel">
       <div class="admin-panel-header">
         <div>
           <div class="admin-panel-title">📋 Manage Reports</div>
-          <div style="font-size:12px;color:#9CA3AF;margin-top:3px">${REPORTS.length} reports — edit titles, URLs, or descriptions anytime</div>
+          <div style="font-size:12px;color:#9CA3AF;margin-top:3px">${REPORTS.length} reports — edit titles, URLs, or descriptions 
+anytime</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <button class="admin-add-btn" onclick="openAddModal()">＋ Add Report</button>
+          <button class="admin-add-btn" onclick="openAddModal()">
+ Add Report</button>
           <button class="admin-add-btn" style="background:#2563EB" onclick="renderSearchAnalytics()">📊 Search Insights</button>
-          <button class="admin-add-btn" style="background:#7C3AED" onclick="bakeAndDownload()" title="Bake all your screenshots into the HTML and download for sharing">🚀 Bake & Share</button>
-          <button class="admin-add-btn" style="background:#059669" onclick="exportImages()" title="Download all screenshots as a backup file">📤 Backup Screenshots</button>
-          <label class="admin-add-btn" style="background:#0891B2;cursor:pointer" title="Upload a previously exported screenshots file">
+          <button class="admin-add-btn" style="background:#7C3AED" onclick="bakeAndDownload()" title="Bake all your screenshots into 
+the HTML and download for sharing">🚀 Bake & Share</button>
+          <button class="admin-add-btn" style="background:#059669" onclick="exportImages()" title="Download all screenshots as a 
+backup file">📤 Backup Screenshots</button>
+          <label class="admin-add-btn" style="background:#0891B2;cursor:pointer" title="Upload a previously exported screenshots 
+file">
             📥 Restore Screenshots
             <input type="file" accept=".json" style="display:none" onchange="importImages(this)">
           </label>
         </div>
       </div>
-      <p style="font-size:12px;color:#6B7280;margin-bottom:14px">💡 <b>Screenshots you upload are only visible to you</b> until you click <b>Bake &amp; Share</b> — that downloads an updated HTML file to push to GitHub so everyone sees them.</p>
+      <p style="font-size:12px;color:#6B7280;margin-bottom:14px">💡 <b>Screenshots you upload are only visible to you</b> until you 
+click <b>Bake &amp; Share</b> — that downloads an updated HTML file to push to GitHub so everyone sees them.</p>
       <table class="admin-table">
         <thead>
           <tr>
@@ -2988,9 +2994,7 @@ function renderAdminTable() {
       </table>
     </div>`;
 }
-
 // ─── SEARCH ANALYTICS PANEL ──────────────────────────────────────────────────
-
 // ── ACTIVITY CHART HELPERS ────────────────────────────────────────────────────
 function _getWeekKey(ts) {
   const d = new Date(ts);
@@ -3001,7 +3005,6 @@ function _getWeekKey(ts) {
   const weekNum = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
   return d.getFullYear() + '-W' + String(weekNum).padStart(2, '0');
 }
-
 function _weekLabel(wk) {
   // wk = '2025-W03' → 'Jan 13'
   const [yr, wStr] = wk.split('-W');
@@ -3011,7 +3014,6 @@ function _weekLabel(wk) {
   monday.setDate(jan4.getDate() - ((jan4.getDay() || 7) - 1) + (week - 1) * 7);
   return monday.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
-
 function _buildBarChartSVG(weeks, data, color, maxVal) {
   const W = 300, H = 100, padL = 28, padB = 20, padR = 8, padT = 8;
   const chartW = W - padL - padR;
@@ -3021,7 +3023,6 @@ function _buildBarChartSVG(weeks, data, color, maxVal) {
   const barW = Math.max(4, Math.floor(chartW / n) - 3);
   const gap  = Math.floor(chartW / n);
   const mx   = maxVal || Math.max(...data, 1);
-
   let bars = '', labels = '', vals = '';
   weeks.forEach((wk, i) => {
     const v = data[i] || 0;
@@ -3029,12 +3030,13 @@ function _buildBarChartSVG(weeks, data, color, maxVal) {
     const bh = Math.max(2, Math.round((v / mx) * chartH));
     const y  = padT + chartH - bh;
     bars   += `<rect x="${x.toFixed(1)}" y="${y}" width="${barW}" height="${bh}" fill="${color}" rx="3" opacity="0.85"/>`;
-    if (v > 0) vals += `<text x="${(x + barW/2).toFixed(1)}" y="${(y-3).toFixed(1)}" text-anchor="middle" font-size="9" fill="#374151" font-weight="600">${v}</text>`;
+    if (v > 0) vals += `<text x="${(x + barW/2).toFixed(1)}" y="${(y-3).toFixed(1)}" text-anchor="middle" font-size="9" 
+fill="#374151" font-weight="600">${v}</text>`;
     // Show label every 2nd bar if crowded
     if (n <= 8 || i % 2 === 0)
-      labels += `<text x="${(x + barW/2).toFixed(1)}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9CA3AF">${_weekLabel(wk)}</text>`;
+      labels += `<text x="${(x + barW/2).toFixed(1)}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9CA3AF">${_weekLabel(wk)}
+</text>`;
   });
-
   // Y-axis grid lines
   let grid = '';
   [0.25, 0.5, 0.75, 1].forEach(frac => {
@@ -3043,14 +3045,12 @@ function _buildBarChartSVG(weeks, data, color, maxVal) {
     grid += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#E5E7EB" stroke-width="1"/>`;
     grid += `<text x="${padL-3}" y="${y+3}" text-anchor="end" font-size="8" fill="#C4C4C4">${v}</text>`;
   });
-
   return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible">
     ${grid}${bars}${vals}${labels}
     <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT+chartH}" stroke="#E5E7EB" stroke-width="1"/>
     <line x1="${padL}" y1="${padT+chartH}" x2="${W-padR}" y2="${padT+chartH}" stroke="#E5E7EB" stroke-width="1"/>
   </svg>`;
 }
-
 function _buildLineChartSVG(weeks, data, color) {
   const W = 300, H = 100, padL = 32, padB = 20, padR = 8, padT = 8;
   const chartW = W - padL - padR;
@@ -3058,17 +3058,15 @@ function _buildLineChartSVG(weeks, data, color) {
   const n = weeks.length;
   if (!n || Math.max(...data) === 0) return '<div class="sa-no-data">No data yet</div>';
   const mx = Math.max(...data, 1);
-
   const pts = data.map((v, i) => {
     const x = padL + (n === 1 ? chartW/2 : i * chartW / (n-1));
     const y = padT + chartH - (v / mx) * chartH;
     return [x, y];
   });
-
-  const pathD = pts.map((p, i) => (i === 0 ? `M${p[0].toFixed(1)},${p[1].toFixed(1)}` : `L${p[0].toFixed(1)},${p[1].toFixed(1)}`)).join(' ');
+  const pathD = pts.map((p, i) => (i === 0 ? `M${p[0].toFixed(1)},${p[1].toFixed(1)}` : 
+`L${p[0].toFixed(1)},${p[1].toFixed(1)}`)).join(' ');
   // Filled area
   const areaD = pathD + ` L${pts[pts.length-1][0].toFixed(1)},${padT+chartH} L${pts[0][0].toFixed(1)},${padT+chartH} Z`;
-
   let grid = '';
   [0.5, 1].forEach(frac => {
     const y = padT + chartH - frac * chartH;
@@ -3076,18 +3074,16 @@ function _buildLineChartSVG(weeks, data, color) {
     grid += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#E5E7EB" stroke-width="1"/>`;
     grid += `<text x="${padL-3}" y="${y+3}" text-anchor="end" font-size="8" fill="#C4C4C4">${v}</text>`;
   });
-
   let labels = '';
   pts.forEach(([x], i) => {
     if (n <= 8 || i % 2 === 0)
-      labels += `<text x="${x.toFixed(1)}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9CA3AF">${_weekLabel(weeks[i])}</text>`;
+      labels += `<text x="${x.toFixed(1)}" y="${H-4}" text-anchor="middle" font-size="9" fill="#9CA3AF">${_weekLabel(weeks[i])}
+</text>`;
   });
-
   let dots = pts.map(([x, y], i) =>
     `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${color}"/>
      <title>${weeks[i]}: ${data[i]}</title>`
   ).join('');
-
   return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible">
     <defs>
       <linearGradient id="lg${color.replace('#','')}" x1="0" y1="0" x2="0" y2="1">
@@ -3103,7 +3099,6 @@ function _buildLineChartSVG(weeks, data, color) {
     <line x1="${padL}" y1="${padT+chartH}" x2="${W-padR}" y2="${padT+chartH}" stroke="#E5E7EB" stroke-width="1"/>
   </svg>`;
 }
-
 function _buildActivityCharts(searchLog) {
   // Get last 8 weeks
   const now = Date.now();
@@ -3111,7 +3106,6 @@ function _buildActivityCharts(searchLog) {
   for (let i = 7; i >= 0; i--) {
     weeks.push(_getWeekKey(now - i * 7 * 86400000));
   }
-
   // Weekly searches
   const searchByWeek = {};
   searchLog.forEach(e => {
@@ -3119,10 +3113,8 @@ function _buildActivityCharts(searchLog) {
     if (weeks.includes(wk)) searchByWeek[wk] = (searchByWeek[wk] || 0) + 1;
   });
   const searchData = weeks.map(w => searchByWeek[w] || 0);
-
   // Weekly logins — not tracked without Google auth
   const loginData = weeks.map(() => 0);
-
   // All-time cumulative searches (by week, all history)
   const allWeekSet = new Set(searchLog.map(e => _getWeekKey(e.ts)));
   const allWeeks = [...allWeekSet].sort();
@@ -3130,17 +3122,14 @@ function _buildActivityCharts(searchLog) {
   searchLog.forEach(e => { const wk = _getWeekKey(e.ts); cumSearchByWeek[wk] = (cumSearchByWeek[wk] || 0) + 1; });
   let running = 0;
   const cumData = allWeeks.map(w => { running += cumSearchByWeek[w] || 0; return running; });
-
   // All-time users — not tracked without Google auth
   const allVisitWeeks = [];
   const cumUsers = [];
   const totalUsers = 0;
-
   const weeklySearchChart  = _buildBarChartSVG(weeks, searchData, '#2563EB');
   const weeklyLoginChart   = _buildBarChartSVG(weeks, loginData, '#7C3AED');
   const cumSearchChart     = allWeeks.length ? _buildLineChartSVG(allWeeks, cumData, '#2563EB') : '<div class="sa-no-data">No data yet</div>';
   const cumUsersChart      = '<div class="sa-no-data">No sign-ins recorded yet</div>';
-
   return (
     '<div class="sa-charts-row">' +
       '<div class="sa-chart-card">' +
@@ -3168,11 +3157,8 @@ function _buildActivityCharts(searchLog) {
     '</div>'
   );
 }
-
-
 function renderSearchAnalytics() {
   const log = _getSearchLog();
-
   // Aggregate by query
   const byQuery = {};
   log.forEach(entry => {
@@ -3183,27 +3169,23 @@ function renderSearchAnalytics() {
     if (entry.hits.length) byQuery[key].hits = entry.hits; // keep latest hit list
     if (entry.ts > byQuery[key].lastTs) byQuery[key].lastTs = entry.ts;
   });
-
   const rows = Object.values(byQuery).sort((a, b) => b.count - a.count);
   const totalSearches = log.length;
   const uniqueQueries = rows.length;
   const noMatchRows   = rows.filter(r => !r.hits.length);
   const noMatchRate   = totalSearches ? Math.round(noMatchRows.length / uniqueQueries * 100) : 0;
-
   // Tab state (persist on window)
   const tab = window._saTab || 'all';
-
   function filtered(t) {
     if (t === 'nomatch') return noMatchRows;
     if (t === 'chat')   return rows.filter(r => r.sources.has('chat'));
     if (t === 'search') return rows.filter(r => r.sources.has('search'));
     return rows;
   }
-
   function tabBtn(t, label, count) {
-    return `<button class="sa-tab ${tab===t?'active':''}" onclick="window._saTab='${t}';renderSearchAnalytics()">${label} <span style="opacity:.6">(${count})</span></button>`;
+    return `<button class="sa-tab ${tab===t?'active':''}" onclick="window._saTab='${t}';renderSearchAnalytics()">${label} <span 
+style="opacity:.6">(${count})</span></button>`;
   }
-
   function rowsHTML(data) {
     if (!data.length) return `<tr><td colspan="5" class="sa-empty">No searches yet${tab!=='all'?' in this filter':''} 🔍</td></tr>`;
     return data.map(r => {
@@ -3230,7 +3212,6 @@ function renderSearchAnalytics() {
       </tr>`;
     }).join('');
   }
-
   function _timeAgo(ts) {
     if (!ts) return '—';
     const diff = Date.now() - ts;
@@ -3239,22 +3220,20 @@ function renderSearchAnalytics() {
     if (diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
     return Math.floor(diff/86400000) + 'd ago';
   }
-
   const visibleRows = filtered(tab);
-
   document.getElementById('adminRoot').innerHTML = `
     <div class="admin-panel">
       <div class="admin-panel-header">
         <div>
           <div class="admin-panel-title">📊 Search Insights</div>
-          <div style="font-size:12px;color:#9CA3AF;margin-top:3px">What people are searching for — logged automatically from the chatbot and search bar</div>
+          <div style="font-size:12px;color:#9CA3AF;margin-top:3px">What people are searching for — logged automatically from the 
+chatbot and search bar</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
           <button class="admin-add-btn" onclick="renderAdminTable()">← Back to Reports</button>
           <button class="sa-clear-btn" onclick="clearSearchLog()">Clear log</button>
         </div>
       </div>
-
       <div class="sa-summary">
         <div class="sa-stat">
           <div class="sa-stat-num">${totalSearches}</div>
@@ -3273,26 +3252,24 @@ function renderSearchAnalytics() {
           <div class="sa-stat-lbl">No-match rate</div>
         </div>
       </div>
-
       ${_buildActivityCharts(log)}
-
       ${noMatchRows.filter(r => r.count >= 2).length ? `
       <div style="background:#FFF7F7;border:1.5px solid #FCA5A5;border-radius:10px;padding:12px 16px;margin-bottom:16px">
-        <div style="font-size:12px;font-weight:700;color:#B91C1C;margin-bottom:6px">⚠️ Needs attention — searched 2+ times with no match:</div>
+        <div style="font-size:12px;font-weight:700;color:#B91C1C;margin-bottom:6px">⚠️ Needs attention — searched 2+ times with no 
+match:</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px">
           ${noMatchRows.filter(r => r.count >= 2).map(r =>
-            `<span style="background:#FEE2E2;color:#B91C1C;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600">${r.q} <span style="opacity:.7">(×${r.count})</span></span>`
+            `<span style="background:#FEE2E2;color:#B91C1C;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600">${r.q} 
+<span style="opacity:.7">(×${r.count})</span></span>`
           ).join('')}
         </div>
       </div>` : ''}
-
       <div class="sa-tabs">
         ${tabBtn('all',    'All',       rows.length)}
         ${tabBtn('nomatch','No match',  noMatchRows.length)}
         ${tabBtn('chat',   'Chatbot',   rows.filter(r=>r.sources.has('chat')).length)}
         ${tabBtn('search', 'Search bar',rows.filter(r=>r.sources.has('search')).length)}
       </div>
-
       <table class="sa-table">
         <thead>
           <tr>
@@ -3305,23 +3282,20 @@ function renderSearchAnalytics() {
         </thead>
         <tbody>${rowsHTML(visibleRows)}</tbody>
       </table>
-
-      ${!totalSearches ? `<p style="font-size:12px;color:#9CA3AF;margin-top:12px">Searches will appear here automatically as people use the chatbot and search bar.</p>` : ''}
+      ${!totalSearches ? `<p style="font-size:12px;color:#9CA3AF;margin-top:12px">Searches will appear here automatically as people 
+use the chatbot and search bar.</p>` : ''}
     </div>`;
 }
-
-
 /* ── Add / Edit modal ── */
 function openAddModal() {
   _editingId = null;
-  document.getElementById('adminModalTitle').textContent = '＋ Add New Report';
+  document.getElementById('adminModalTitle').textContent = 'Add New Report';
   ['amTitle','amHexTitle','amSubtitle','amHexUrl','amTags'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('amArea').value = 'MQL';
   amResetImgField();
   document.getElementById('adminModalBg').classList.add('open');
   setTimeout(() => document.getElementById('amTitle').focus(), 80);
 }
-
 function openEditModal(id) {
   _editingId = id;
   const r = REPORTS.find(x => x.id === id);
@@ -3337,163 +3311,31 @@ function openEditModal(id) {
   const existingImg = loadImage(id);
   if (existingImg) {
     _pendingAdminImg = null; // don't re-save unless they upload a new one
-    const preview = document.getElementById('amImgPreview');
-    preview.src = existingImg;
-    preview.style.display = 'block';
-    document.getElementById('amImgPlaceholder').style.display = 'none';
-    document.getElementById('amImgRemove').style.display = 'block';
-  } else {
-    amResetImgField();
-  }
-  document.getElementById('adminModalBg').classList.add('open');
-  setTimeout(() => document.getElementById('amTitle').focus(), 80);
-}
-
-function closeAdminModal() {
-  document.getElementById('adminModalBg').classList.remove('open');
-  _editingId = null;
-  _pendingAdminImg = null;
-}
-
-// ─── TOAST NOTIFICATION ──────────────────────────────────────────────────────
-function _showToast(msg, durationMs = 2800) {
-  const el = document.getElementById('wsToast');
-  if (!el) return;
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(el._toastTimer);
-  el._toastTimer = setTimeout(() => el.classList.remove('show'), durationMs);
-}
-
-// ─── Screenshot field helpers ─────────────────────────────────────────────────
-let _pendingAdminImg = null;
-
-function amImgDrop(e) {
-  const file = e.dataTransfer.files[0];
-  if (!file || !file.type.startsWith('image/')) return;
-  amImgProcess(file);
-}
-function amImgFileChange(input) {
-  if (!input.files[0]) return;
-  amImgProcess(input.files[0]);
-}
-function amImgProcess(file) {
-  processFile(file, dataUrl => {
-    _pendingAdminImg = dataUrl;
-    const preview = document.getElementById('amImgPreview');
-    preview.src = dataUrl;
-    preview.style.display = 'block';
-    document.getElementById('amImgPlaceholder').style.display = 'none';
-    document.getElementById('amImgRemove').style.display = 'block';
-  });
-}
-function amClearImg() {
-  _pendingAdminImg = null;
-  document.getElementById('amImgPreview').style.display = 'none';
-  document.getElementById('amImgPreview').src = '';
-  document.getElementById('amImgPlaceholder').style.display = '';
-  document.getElementById('amImgRemove').style.display = 'none';
-  document.getElementById('amImgInput').value = '';
-}
-function amResetImgField() {
-  amClearImg();
-}
-
-function saveAdminForm() {
-  const title    = document.getElementById('amTitle').value.trim();
-  const area     = document.getElementById('amArea').value;
-  const hexTitle = document.getElementById('amHexTitle').value.trim();
-  const subtitle = document.getElementById('amSubtitle').value.trim();
-  const hexUrl   = document.getElementById('amHexUrl').value.trim();
-  const tags     = document.getElementById('amTags').value.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
-
-  if (!title || !hexUrl) { alert('Title and Hex URL are required.'); return; }
-
-  if (_editingId) {
-    const isCustom = loadCustomReports().some(r => r.id === _editingId);
-    if (isCustom) {
-      saveCustomReports(loadCustomReports().map(r =>
-        r.id === _editingId ? { ...r, title, area, hexTitle, subtitle, hexUrl, tags } : r
-      ));
-    } else {
-      const edits = loadAdminEdits();
-      edits[_editingId] = { title, area, hexTitle, subtitle, hexUrl, tags };
-      saveAdminEdits(edits);
-    }
-    // Save screenshot for existing report if one was dropped in
-    if (_pendingAdminImg) { saveImage(_editingId, _pendingAdminImg); }
-  } else {
-    const newId = 'custom_' + Date.now();
-    const customs = loadCustomReports();
-    customs.push({ id: newId, area, title, hexTitle, subtitle, hexUrl,
-                   popular:false, attrType:'none', filters:'', tags });
-    saveCustomReports(customs);
-    // Auto-save the screenshot immediately with the new report's ID
+    const preview = document.getElementById('amImgPreview');preview.src = existingImg;preview.style.display = 'block';document.getElementById('amImgPlaceholder').style.display = 'none';document.getElementById('amImgRemove').style.display = 'block';} else {amResetImgField();}document.getElementById('adminModalBg').classList.add('open');setTimeout(() => document.getElementById('amTitle').focus(), 80);}function closeAdminModal() {document.getElementById('adminModalBg').classList.remove('open');_editingId = null;_pendingAdminImg = null;}// ─── TOAST NOTIFICATION ──────────────────────────────────────────────────────
+function _showToast(msg, durationMs = 2800) {const el = document.getElementById('wsToast');if (!el) return;el.textContent = msg;el.classList.add('show');clearTimeout(el._toastTimer);el._toastTimer = setTimeout(() => el.classList.remove('show'), durationMs);}// ─── Screenshot field helpers ─────────────────────────────────────────────────
+let _pendingAdminImg = null;function amImgDrop(e) {const file = e.dataTransfer.files[0];if (!file || !file.type.startsWith('image/')) return;amImgProcess(file);}function amImgFileChange(input) {if (!input.files[0]) return;amImgProcess(input.files[0]);}function amImgProcess(file) {processFile(file, dataUrl => {_pendingAdminImg = dataUrl;const preview = document.getElementById('amImgPreview');preview.src = dataUrl;preview.style.display = 'block';document.getElementById('amImgPlaceholder').style.display = 'none';document.getElementById('amImgRemove').style.display = 'block';});}function amClearImg() {_pendingAdminImg = null;document.getElementById('amImgPreview').style.display = 'none';document.getElementById('amImgPreview').src = '';document.getElementById('amImgPlaceholder').style.display = '';document.getElementById('amImgRemove').style.display = 'none';document.getElementById('amImgInput').value = '';}function amResetImgField() {amClearImg();}function saveAdminForm() {const title    = document.getElementById('amTitle').value.trim();const area     = document.getElementById('amArea').value;const hexTitle = document.getElementById('amHexTitle').value.trim();const subtitle = document.getElementById('amSubtitle').value.trim();const hexUrl   = document.getElementById('amHexUrl').value.trim();const tags     = document.getElementById('amTags').value.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);if (!title || !hexUrl) { alert('Title and Hex URL are required.'); return; }if (_editingId) {const isCustom = loadCustomReports().some(r => r.id === _editingId);if (isCustom) {saveCustomReports(loadCustomReports().map(r =>r.id === _editingId ? { ...r, title, area, hexTitle, subtitle, hexUrl, tags } : r));} else {const edits = loadAdminEdits();edits[_editingId] = { title, area, hexTitle, subtitle, hexUrl, tags };saveAdminEdits(edits);}// Save screenshot for existing report if one was dropped in
+    if (_pendingAdminImg) { saveImage(_editingId, _pendingAdminImg); }} else {const newId = 'custom_' + Date.now();const customs = loadCustomReports();customs.push({ id: newId, area, title, hexTitle, subtitle, hexUrl,popular:false, attrType:'none', filters:'', tags });saveCustomReports(customs);// Auto-save the screenshot immediately with the new report's ID
     if (_pendingAdminImg) { saveImage(newId, _pendingAdminImg); }
   }
-
   const savedImgThisTime = !!_pendingAdminImg;
   const savedArea = area; // capture before reset
   _pendingAdminImg = null;
   closeAdminModal();
   reloadReports();
-
   // If a screenshot was just attached, exit admin mode and jump to the card
   // so there's immediate visual confirmation it worked
-  if (savedImgThisTime) {
-    adminView = false;
-    document.getElementById('adminRoot').style.display    = 'none';
-    document.getElementById('sectionsRoot').style.display = '';
-    document.querySelectorAll('.admin-cat-item').forEach(el => el.classList.remove('active'));
-    activeArea = savedArea;
-    renderFolderList();
-    renderAll();
-    // Scroll to the top of the content so the card is visible
-    document.querySelector('.main').scrollTop = 0;
-    // Brief toast confirmation
-    _showToast('Screenshot saved! ✓');
-  } else {
-    renderAdminTable();
-    renderAll();
-    document.getElementById('pageSubtitle').textContent = `${REPORTS.length} reports · admin view`;
-  }
-}
-
-/* ── Bake screenshots into the HTML for universal sharing ── */
-async function bakeAndDownload() {
-  // Collect localStorage screenshots
-  const localImgs = {};
-  Object.keys(localStorage).forEach(k => {
-    if (k.startsWith('ws_report_img_')) localImgs[k] = localStorage.getItem(k);
-  });
-
-  if (!Object.keys(localImgs).length) {
-    alert('No screenshots uploaded yet. Add screenshots to reports first, then bake.');
-    return;
-  }
-
-  _showToast('Preparing your file — this may take a moment…');
-
-  // Fetch the current page source
-  let html;
-  try {
-    const resp = await fetch(location.href);
-    if (!resp.ok) throw new Error('bad response');
-    html = await resp.text();
-  } catch(e) {
-    // Local file fallback — auto-download the backup JSON so the user can
-    // drag it to Cowork and have it baked in automatically
-    exportImages();
-    setTimeout(() => {
-      alert('You\'re viewing this locally, so the one-click bake can\'t run here.\n\nHere\'s what to do:\n\n1. ✅ Screenshots backup just downloaded!\n2. Drag that .json file into your Cowork chat\n3. I\'ll bake it into the HTML automatically so everyone sees the screenshots 🚀\n\nOnce deployed to Netlify, "Bake & Share" will work in one click.');
+  if (savedImgThisTime) {adminView = false;document.getElementById('adminRoot').style.display    = 'none';document.getElementById('sectionsRoot').style.display = '';document.querySelectorAll('.admin-cat-item').forEach(el => el.classList.remove('active'));activeArea = savedArea;renderFolderList();renderAll();// Scroll to the top of the content so the card is visible
+    document.querySelector('.main').scrollTop = 0;// Brief toast confirmation
+    _showToast('Screenshot saved! ✓');} else {renderAdminTable();renderAll();document.getElementById('pageSubtitle').textContent = `${REPORTS.length} reports · admin view`;}}/* ── Bake screenshots into the HTML for universal sharing ── */async function bakeAndDownload() {// Collect localStorage screenshots
+  const localImgs = {};Object.keys(localStorage).forEach(k => {if (k.startsWith('ws_report_img_')) localImgs[k] = localStorage.getItem(k);});if (!Object.keys(localImgs).length) {alert('No screenshots uploaded yet. Add screenshots to reports first, then bake.');return;}_showToast('Preparing your file — this may take a moment…');// Fetch the current page source
+  let html;try {const resp = await fetch(location.href);if (!resp.ok) throw new Error('bad response');html = await resp.text();} catch(e) {// Local file fallback — auto-download the backup JSON so the user can// drag it to Cowork and have it baked in automatically
+    exportImages();setTimeout(() => {alert('You\'re viewing this locally, so the one-click bake can\'t run here.\n\nHere\'s what to do:\n\n1. ✅ Screenshots backup just downloaded!\n2. Drag that .json file into your Cowork chat\n3. I\'ll bake it into the HTML automatically so everyone sees the screenshots 🚀\n\nOnce deployed to Netlify, "Bake & Share" will work in one click.');
     }, 400);
     return;
   }
-
   // Merge new images into BAKED_IMAGES
   const merged = { ...BAKED_IMAGES, ...localImgs };
   const bakedStr = 'const BAKED_IMAGES = ' + JSON.stringify(merged) + ';';
-
   // Find and replace BAKED_IMAGES block using brace-counting
   const startMarker = 'const BAKED_IMAGES = {';
   const startIdx = html.indexOf(startMarker);
@@ -3507,9 +3349,7 @@ async function bakeAndDownload() {
     else if (html[i] === '}') { depth--; if (depth === 0) { endIdx = i + 1; break; } }
   }
   if (html[endIdx] === ';') endIdx++; // include the semicolon
-
   const updatedHtml = html.slice(0, startIdx) + bakedStr + html.slice(endIdx);
-
   // Trigger download
   const blob = new Blob([updatedHtml], { type: 'text/html' });
   const a = document.createElement('a');
@@ -3519,11 +3359,9 @@ async function bakeAndDownload() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(a.href);
-
   const count = Object.keys(localImgs).length;
   _showToast(`Done! ${count} screenshot${count!==1?'s':''} baked in — push to GitHub to share 🚀`, 4000);
 }
-
 /* ── Export / Import screenshots ── */
 function exportImages() {
   const data = {};
@@ -3538,7 +3376,6 @@ function exportImages() {
   a.click();
   URL.revokeObjectURL(a.href);
 }
-
 function importImages(input) {
   const file = input.files[0];
   if (!file) return;
@@ -3558,7 +3395,6 @@ function importImages(input) {
   };
   reader.readAsText(file);
 }
-
 /* ── Delete ── */
 function deleteReport(id) {
   const r = REPORTS.find(x => x.id === id);
@@ -3575,7 +3411,6 @@ function deleteReport(id) {
   renderAdminTable();
   document.getElementById('pageSubtitle').textContent = `${REPORTS.length} reports · admin view`;
 }
-
 /* ── Close modals on backdrop click ── */
 document.getElementById('pwModalBg').addEventListener('click', e => {
   if (e.target === document.getElementById('pwModalBg')) closePwModal();
@@ -3583,11 +3418,9 @@ document.getElementById('pwModalBg').addEventListener('click', e => {
 document.getElementById('adminModalBg').addEventListener('click', e => {
   if (e.target === document.getElementById('adminModalBg')) closeAdminModal();
 });
-
 // ─── PASSWORD GATE ────────────────────────────────────────────────────────────
 const PW_KEY = 'hexplorer_auth_v2';
 const CORRECT_PW = '1t1s';
-
 function checkGatePassword() {
   const input = document.getElementById('gateInput');
   const errEl = document.getElementById('gateError');
@@ -3605,7 +3438,6 @@ function checkGatePassword() {
     setTimeout(() => input.classList.remove('pw-error'), 500);
   }
 }
-
 (function() {
   if (sessionStorage.getItem(PW_KEY) === '1') {
     const gate = document.getElementById('pwGate');
@@ -3617,7 +3449,6 @@ function checkGatePassword() {
     }, 120);
   }
 })();
-
 // Flush any pending search log entry when the page is closed/navigated away
 window.addEventListener('beforeunload', () => {
   if (_pendingSearchVal && _pendingSearchVal.length >= 3) {
