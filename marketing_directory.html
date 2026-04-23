@@ -1228,12 +1228,16 @@
     <div class="pw-divider"></div>
 
     <p class="pw-welcome">
-      Welcome to the Workstream marketing analytics hub. This directory contains internal reports and data. Enter the team password to continue.
+      Answer the question below to get in.
+    </p>
+
+    <p style="font-size:15px;font-weight:600;color:rgba(255,255,255,0.95);margin-bottom:16px;line-height:1.4;">
+      The San Francisco office's favorite good girl has a product marketer mom. What's her name? 🐶
     </p>
 
     <div class="pw-input-wrap">
-      <input class="pw-input" id="gateInput" type="password"
-        placeholder="Team password"
+      <input class="pw-input" id="gateInput" type="text"
+        placeholder="Type your answer..."
         onkeydown="if(event.key==='Enter') checkGatePassword()">
     </div>
     <div class="pw-error-msg" id="gateError"></div>
@@ -3497,7 +3501,7 @@ document.getElementById('adminModalBg').addEventListener('click', e => {
 });
 // ─── PASSWORD GATE ────────────────────────────────────────────────────────────
 const PW_KEY = 'hexplorer_auth_v2';
-const CORRECT_PW = '1t1s';
+const CORRECT_PW = 'nori';
 function checkGatePassword() {
   const input = document.getElementById('gateInput');
   const errEl = document.getElementById('gateError');
@@ -3509,7 +3513,7 @@ function checkGatePassword() {
     setTimeout(() => gate.remove(), 420);
   } else {
     input.classList.add('pw-error');
-    errEl.textContent = 'Incorrect password. Try again.';
+    errEl.textContent = 'Not quite — try again 🐾';
     input.value = '';
     input.focus();
     setTimeout(() => input.classList.remove('pw-error'), 500);
