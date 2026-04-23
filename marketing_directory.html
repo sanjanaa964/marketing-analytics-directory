@@ -3527,6 +3527,23 @@ function checkGatePassword() {
   }
 })();
 // Flush any pending search log entry when the page is closed/navigated away
+// ── Auto-open chatbot on first load ──────────────────────────────────────────
+window.addEventListener('load', () => {
+  const popup = document.getElementById('chatbotPopup');
+  const dot   = document.getElementById('fabDot');
+  if (popup) {
+    popup.classList.add('open');
+    if (dot) dot.style.display = 'none';
+    if (!cbGreeted) {
+      cbGreeted = true;
+      _cbBotMsg(
+        `Hey 👋 What report do you need?<br>I can find it based on what you're trying to answer.`,
+        _buildChips(CHIP_SUGGESTIONS)
+      );
+    }
+  }
+});
+
 window.addEventListener('beforeunload', () => {
   if (_pendingSearchVal && _pendingSearchVal.length >= 3) {
     clearTimeout(_searchLogTimer);
