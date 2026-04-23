@@ -1480,7 +1480,7 @@ const BASE_REPORTS = [
   // ── DIGEST ────────────────────────────────────────────────────────────
   {
     id:'r01', area:'DIGEST',
-    title:'All Channels Bi-Weekly', hexTitle:'Digest | Biweekly Marketing Report | What happened & what\'s next?',
+    title:'The Bi-Weekly Report', hexTitle:'Digest | Biweekly Marketing Report | What happened & what\'s next?',
     subtitle:'Full funnel: MQL, pipeline, won ARR, efficiency — every channel in one view',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/019b28a3-0678-7335-aa78-a466e0fb5821/latest',
     popular:false, attrType:'both',
@@ -1529,7 +1529,7 @@ const BASE_REPORTS = [
   // ── PIPE ──────────────────────────────────────────────────────────────
   {
     id:'r02', area:'PIPE',
-    title:'Single Channel Deep Dive', hexTitle:'SRC | Channel Performance | MQLs, Pipe & Efficiency by Channel | How is THIS channel performing?',
+    title:'How\'s Your Channel Performing?', hexTitle:'SRC | Channel Performance | MQLs, Pipe & Efficiency by Channel | How is THIS channel performing?',
     subtitle:'Full drill-down into ONE channel: MQLs, attributed + influenced pipe, ROI, H1 targets',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/019ce857-0a7b-7ff9-86aa-39c19b3cf428/latest',
     popular:false, attrType:'both',
@@ -1585,7 +1585,7 @@ const BASE_REPORTS = [
   },
   {
     id:'r12', area:'FUNNEL',
-    title:'MQL → Pipeline Duration', hexTitle:'Cohort | MQL to Pipe Duration | How long do accounts take to become pipeline?',
+    title:'MQL to Pipe Conversion Cohort', hexTitle:'Cohort | MQL to Pipe Duration | How long do accounts take to become pipeline?',
     subtitle:'How many days does it take for MQLs to become pipeline? Cohort table by quarter.',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/019d63f5-b593-700f-bf56-ed3ba56b85e0/latest',
     popular:false, attrType:'first',
@@ -1596,7 +1596,7 @@ const BASE_REPORTS = [
   // ── COST ──────────────────────────────────────────────────────────────
   {
     id:'r10', area:'COST',
-    title:'Kera\'s Efficiency Report', hexTitle:'Src | Attr/Infl Pipe, Won, Cost, ROI by Channel | What\'s the ROI by channel?',
+    title:'Channel & Campaign Level Efficiency Report', hexTitle:'Src | Attr/Infl Pipe, Won, Cost, ROI by Channel | What\'s the ROI by channel?',
     subtitle:'Attributed + influenced pipe, won ARR, MQLs, costs, and ROI — all channels and campaigns',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/019bed7f-fac0-7000-9596-bb6e6d5dcf93/latest',
     popular:true, attrType:'both',
@@ -1605,7 +1605,7 @@ const BASE_REPORTS = [
   },
   {
     id:'r03', area:'COST',
-    title:'Channel Scorecard', hexTitle:'SRC | Cross-Channel KPI Summary | Pipeline, Cost & ROI by Channel | How is marketing performing?',
+    title:'Channel Scorecard (Sheets Automation)', hexTitle:'SRC | Cross-Channel KPI Summary | Pipeline, Cost & ROI by Channel | How is marketing performing?',
     subtitle:'2025 annual view: MQL volume, spend, cost per MQL, and pipeline ROI by channel',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/hex/SRC-Cross-Channel-KPI-Summary-Pipeline-Cost-ROI-by-Channel-How-is-marketing-performing-032wBXNeSdn1nGo4PAMc06/draft/logic',
     popular:false, attrType:'first',
@@ -1667,7 +1667,7 @@ const BASE_REPORTS = [
   // ── PIPE (additional) ─────────────────────────────────────────────────
   {
     id:'r24', area:'PIPE',
-    title:'Pipe & Won by All Categories',
+    title:'Pipe, Won & Cost with Full Categorical Breakdowns',
     hexTitle:'SRC | Pipe & Won | Graphs w Full Breakdown',
     subtitle:'Pipe and won graphs broken down by attribution category, channel, entity, tactic, campaign type — the most complete attribution view we have',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/Src-Pipe-Won-Graphs-w-full-breakdown-032MOryTMDuTNnMusBeZx4/latest',
@@ -1687,7 +1687,7 @@ const BASE_REPORTS = [
 
   {
     id:'r26', area:'DIGEST',
-    title:'FY2026 Revenue Targets Digest',
+    title:'FY26 Company Revenue Targets by Segment',
     hexTitle:'Digest | FY2026 Revenue Targets — Monthly, $11M net new by channel',
     subtitle:'Monthly ARR tracking vs FY26 targets by segment — Franchise Sales, CFA Net Incremental, PA Inbound, and Corporate Partnerships',
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/Digest-FY2026-Revenue-Targets-Monthly-11M-net-new-by-channel-032z8CcecHCYkxcjihwfNk/latest',
@@ -2439,6 +2439,34 @@ const REPORT_DETAILS = {
       'Cost by channel'
     ],
     bestFor: 'The most complete attribution view in the entire stack — this is the only report with marketing account sourced, account source, AND all attribution categories beyond just opportunity source. Use when you need to understand the full picture of how pipeline is attributed across marketing, sales, unattributed, and every subcategory. The marketing-only toggle lets you isolate purely marketing-driven pipeline.'
+  },
+  'r27': {
+    questions: [
+      'How many MQLs did our email campaigns generate this quarter?',
+      'What is the open rate, click rate, and CTR across our emails?',
+      'Which email campaigns influenced the most pipeline or won deals?',
+      'How did a specific email perform — sends, opens, clicks, unsubscribes?',
+      'What is email performance broken down by source channel (ContentNL, DemoPush, BD, etc.)?',
+      'How does email engagement correlate with funnel metrics like MQLs and influenced SQOs?',
+      'Which emails are tagged as legacy or evergreen?',
+      'What is the week-over-week performance trend for a specific email type?',
+      'Which Salesforce campaign did a given HubSpot email match to?'
+    ],
+    breakdowns: [
+      'Campaign Performance Combined (per Salesforce campaign): campaign name, quarter, month, source channel, brand, content type, audience, respondents, T1 MQLs, T2 MQLs, pipeline opps, pipeline ARR, won deals, influenced SQOs + pipeline',
+      'Email Performance Table (per email per day from HubSpot): email name, subject, type, date, sent, delivered, opens, open rate, clicks, CTR, reads, replies, reply rate, unsubs, unsub rate',
+      'Email to Campaign Map tab: fuzzy-matched HubSpot email to Salesforce campaign lookup — editable, manual corrections preserved across runs',
+      'Weekly Performance Data tab: weekly grain by email type with engagement and funnel metrics plus WoW changes',
+      'Source channels: BD, Brand, CS, ContentNL, ContentNL2, DemoPush, DemoPush2, Events, Partner, Product, ProductNL, Referral'
+    ],
+    timeRange: 'Filterable by date range (HubSpot send date). Weekly Performance Data tab aggregates by week with week-over-week deltas.',
+    charts: [
+      'KPI cards: sent, delivered, open rate, click rate, CTR, unsub rate, unique opens, unique clicks, replies, unsubscribes',
+      'Campaign Performance Combined table (Salesforce attribution per campaign)',
+      'Email Performance Table (HubSpot engagement, one row per email per day)',
+      'Weekly Performance Data tab (weekly by email type, engagement and funnel side by side)'
+    ],
+    bestFor: 'The only report that connects HubSpot email engagement (opens, clicks, CTRs) with Salesforce campaign attribution (MQLs, pipeline, won) in one place. Use Campaign Performance Combined for funnel metrics, Email Performance Table for engagement deep dives, and Weekly Performance Data for trend analysis by email type. If a fuzzy match is wrong, fix it directly in the Email to Campaign Map tab — edits are preserved on the next run. Lives in Google Sheets, not Hex.'
   }
 };
 // ─── Toggle expanded card detail ──────────────────────────────────────────────
@@ -2749,6 +2777,7 @@ const ROUTES = [
   { kw:['nrr','net revenue retention','expansion','churn','retention rate','gross retention'], id:'r21' },
   { kw:['mql by channel','channel mql','which channel drives mql','channel performance','channel comparison'], id:'r02' },
   { kw:['pipeline by stage','pipe stage','stage breakdown','opp stage'], id:'r09' },
+  { kw:['email performance','email campaign','email report','hubspot','email attribution','open rate','click rate','ctr','email engagement','contentnl','demopush','email mql','email pipeline','campaign attribution email','email to campaign','fuzzy match','email to revenue','send to revenue','email funnel','lena email','email sheets','email google sheets'], id:'r27' },
 ];
 /* ---------- routing ---------- */
 const CB_STOP_WORDS = new Set([
