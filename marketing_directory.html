@@ -3496,6 +3496,21 @@ document.getElementById('adminModalBg').addEventListener('click', e => {
   if (e.target === document.getElementById('adminModalBg')) closeAdminModal();
 });
 // ─── PASSWORD GATE ────────────────────────────────────────────────────────────
+function _openChatbotOnLoad() {
+  const popup = document.getElementById('chatbotPopup');
+  const dot   = document.getElementById('fabDot');
+  if (!popup) return;
+  popup.classList.add('open');
+  if (dot) dot.style.display = 'none';
+  if (!cbGreeted) {
+    cbGreeted = true;
+    _cbBotMsg(
+      `Hey 👋 What report do you need?<br>I can find it based on what you're trying to answer.`,
+      _buildChips(CHIP_SUGGESTIONS)
+    );
+  }
+}
+
 const PW_KEY = 'hexplorer_auth_v2';
 function checkGatePassword() {
   const input = document.getElementById('gateInput');
@@ -3505,7 +3520,7 @@ function checkGatePassword() {
     localStorage.setItem(PW_KEY, val);
     const gate = document.getElementById('pwGate');
     gate.classList.add('hidden');
-    setTimeout(() => gate.remove(), 420);
+    setTimeout(() => { gate.remove(); _openChatbotOnLoad(); }, 420);
   } else {
     input.classList.add('pw-error');
     errEl.textContent = 'Please enter a valid email address.';
@@ -3517,6 +3532,7 @@ function checkGatePassword() {
   if (localStorage.getItem(PW_KEY) && localStorage.getItem(PW_KEY).endsWith('@workstream.is')) {
     const gate = document.getElementById('pwGate');
     if (gate) gate.remove();
+    window.addEventListener('load', _openChatbotOnLoad);
   } else {
     setTimeout(() => {
       const inp = document.getElementById('gateInput');
@@ -3525,23 +3541,6 @@ function checkGatePassword() {
   }
 })();
 // Flush any pending search log entry when the page is closed/navigated away
-// ── Auto-open chatbot on first load ──────────────────────────────────────────
-window.addEventListener('load', () => {
-  const popup = document.getElementById('chatbotPopup');
-  const dot   = document.getElementById('fabDot');
-  if (popup) {
-    popup.classList.add('open');
-    if (dot) dot.style.display = 'none';
-    if (!cbGreeted) {
-      cbGreeted = true;
-      _cbBotMsg(
-        `Hey 👋 What report do you need?<br>I can find it based on what you're trying to answer.`,
-        _buildChips(CHIP_SUGGESTIONS)
-      );
-    }
-  }
-});
-
 window.addEventListener('beforeunload', () => {
   if (_pendingSearchVal && _pendingSearchVal.length >= 3) {
     clearTimeout(_searchLogTimer);
