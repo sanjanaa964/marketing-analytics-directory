@@ -1228,12 +1228,15 @@
     <div class="pw-divider"></div>
 
     <p class="pw-welcome">
-      Enter your email to get in. You'll only need to do this once.
+      Answer the question below to get in.
+    </p>
+
+    <p style="font-size:15px;font-weight:600;color:#1e3a8a;margin-bottom:16px;line-height:1.5;">
+      The San Francisco office's favorite good girl has a product marketer mom. What's her name? 🐶
     </p>
 
     <div class="pw-input-wrap">
-      <input class="pw-input" id="gateInput" type="email"
-        
+      <input class="pw-input" id="gateInput" type="text"
         onkeydown="if(event.key==='Enter') checkGatePassword()">
     </div>
     <div class="pw-error-msg" id="gateError"></div>
@@ -1485,7 +1488,7 @@ const BASE_REPORTS = [
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/019b28a3-0678-7335-aa78-a466e0fb5821/latest',
     popular:false, attrType:'both',
     filters:'Channel, Campaign, Date',
-    tags:['digest','biweekly','all channels','mql','pipeline','won','efficiency','summary','overview','how are we doing'],
+    tags:['digest','biweekly','all channels','mql','pipeline','won','efficiency','summary','overview','how are we doing','exec','executive','executive summary','weekly update','marketing update','all channel update'],
   },
   {
     id:'r14', area:'DIGEST',
@@ -1693,7 +1696,7 @@ const BASE_REPORTS = [
     hexUrl:'https://app.hex.tech/b459c17a-0b5c-4c28-bf33-b996f460367e/app/Digest-FY2026-Revenue-Targets-Monthly-11M-net-new-by-channel-032z8CcecHCYkxcjihwfNk/latest',
     popular:true, attrType:'none',
     filters:'Month, Segment',
-    tags:['arr','revenue','fy26','target','actual','franchise sales','cfa','pa inbound','corporate partnerships','ending arr','cumulative arr','segment','revenue target','fy2026','bridge','monthly'],
+    tags:['arr','revenue','fy26','target','actual','franchise sales','cfa','pa inbound','corporate partnerships','ending arr','cumulative arr','segment','revenue target','fy2026','bridge','monthly','finance','financial','company revenue','company arr','exec','executive','company metrics','revenue dashboard','finance dashboard'],
   },
 
 
@@ -2819,7 +2822,12 @@ function _cbRoute(query) {
   const typingRow = _cbTyping();
   setTimeout(() => {
     _removeTyping();
-    const q = query.toLowerCase();
+    // Strip natural language wrappers so "where can I find X" → "X"
+    const raw = query.toLowerCase();
+    const q = raw
+      .replace(/^(where can i find|where do i find|how do i find|show me|can you show|i need|i want|find me|what is|what's|whats|how to see|how do i see|how can i see|is there a|do we have a|do we have|give me|pull up|open|get me|look for|looking for|searching for|search for)\s+/i, '')
+      .replace(/(the |a |an |our |report|dashboard|page)/g, ' ')
+      .replace(/\s+/g, ' ').trim();
     // 0. Handle "show me more / another" intent FIRST (before any new matching)
     const moreIntent = /\b(more|another|different|else|other|next)\b/.test(q);
     if (moreIntent && cbPendingResults.length) {
@@ -2855,8 +2863,7 @@ function _cbRoute(query) {
             if (titleLow.includes(w))    score += 3;  // title match = high signal
             else if (haystack.includes(w)) score += 1;
           }
-          if (score >= 3) scored.push({ ...r, _score: score }); // minimum threshold — require at least 1 title match or 3 tag 
-matches
+          if (score >= 1) scored.push({ ...r, _score: score });
         });
         scored.sort((a, b) => b._score - a._score);
         matched = scored.slice(0, 3);
@@ -3490,24 +3497,26 @@ function _openChatbotOnLoad() {
 }
 
 const PW_KEY = 'hexplorer_auth_v2';
+const CORRECT_PW = 'nori';
 function checkGatePassword() {
   const input = document.getElementById('gateInput');
   const errEl = document.getElementById('gateError');
   const val = input.value.trim().toLowerCase();
-  if (val.endsWith('@workstream.is')) {
-    localStorage.setItem(PW_KEY, val);
+  if (val === CORRECT_PW) {
+    sessionStorage.setItem(PW_KEY, '1');
     const gate = document.getElementById('pwGate');
     gate.classList.add('hidden');
     setTimeout(() => { gate.remove(); _openChatbotOnLoad(); }, 420);
   } else {
     input.classList.add('pw-error');
-    errEl.textContent = 'Please enter a valid email address.';
+    errEl.textContent = 'Not quite — try again 🐾';
+    input.value = '';
     input.focus();
     setTimeout(() => input.classList.remove('pw-error'), 500);
   }
 }
 (function() {
-  if (localStorage.getItem(PW_KEY) && localStorage.getItem(PW_KEY).endsWith('@workstream.is')) {
+  if (sessionStorage.getItem(PW_KEY) === '1') {
     const gate = document.getElementById('pwGate');
     if (gate) gate.remove();
     window.addEventListener('load', _openChatbotOnLoad);
