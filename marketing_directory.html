@@ -2783,7 +2783,7 @@ const ROUTES = [
   { kw:['on track','kr target','h1 target','okr','goal','progress vs target','are we on track','hitting target','target tracker','pipe over cost','pipeline over cost','pipe vs cost','pipeline vs cost','pipe over cost ratio','pipeline over cost ratio','buy over cost','pipe over cost ytd','pipeline ytd','presentation dashboard','kr presentation','kr tracking','okr tracking','are we hitting','h1 progress','weekly cumulative','kr targets','digest mql pipe','digest kr targets','h1 pipeline events','h1 pipeline marketing','total closed one','total pipeline ytd','ytd pipe over cost','pipe cost ratio ytd','weekly cumulative graphs','kr targets weekly','mql pipe one vs target','our kr tracking','our kr targets'], id:'r15' },
   { kw:['how are we doing','summary','biweekly','bi-weekly','weekly summary','overview','marketing overview','all channels','channel mix','all channels biweekly','biweekly report','biweekly update','channel update','channel owner','marketing update','marketing general','channel digest','biweekly marketing','pipeline by channel','won by channel','mql by channel','tier 1 mql','tier 2 mql','t1 mql','t2 mql','lead funnel','mql to sqo','cost per mql by channel','cost per opportunity','pipeline per dollar','channel owner update','bastian','paid media growth','executive view','exec view','deep dive table','campaign sql','opportunity by product','hiring opportunity','payroll opportunity','team management opportunity','efficiency metrics','channel performance','biweekly digest','won count','won amount'], id:'r01' },
   { kw:['28 day','last 28','rolling kpi','last month','rolling 28','last 28 days','month over month','recent kpi'], id:'r14' },
-  { kw:['how many mql','mql count','mql this week','mql volume','mql trend','mql by week','weekly mql','src mql count','mql count and value','mql value','lead scoring','lead score coverage','mql scoring','t1 mql count','t2 mql count','tier 1 mql','tier 2 mql','mql by tier','weekly mql value in dollars','mql by channel','mql person table','person level mql','campaign level mql','lead scoring monitor','mql coverage percentage','mql start date','mql end date'], id:'r05' },
+  { kw:['mql','how many mql','mql count','mql this week','mql volume','mql trend','mql by week','weekly mql','src mql count','mql count and value','mql value','lead scoring','lead score coverage','mql scoring','t1 mql count','t2 mql count','tier 1 mql','tier 2 mql','mql by tier','weekly mql value in dollars','mql by channel','mql person table','person level mql','campaign level mql','lead scoring monitor','mql coverage percentage','mql start date','mql end date'], id:'r05' },
   { kw:['which event','which webinar','which campaign drove','event pipeline','campaign entity','event roi','webinar pipeline','entity pipeline','by entity','entity report','src entity','influence by entity','attribution by entity','entity funnel','multi channel pipeline','marketing only toggle','specific entity','entity filter','entity table','op by entity','campaign activation','entity analysis','entity level','entity snapshot','webinar vs conference','events vs webinars'], id:'r09' },
   { kw:['form fill','demo request','inbound lead','form fills','inbound','demo requests','web leads'], id:'r08' },
   { kw:['win rate','pipe to won','close rate','win loss','won deals','closed won'], id:'r17' },
@@ -2818,6 +2818,49 @@ const CB_STOP_WORDS = new Set([
   'tell','find','look','need','help','which','about','would','could','there',
   'their','where','other','than','also','only','after','send','make',
 ]);
+
+// ─── GEMINI AI FALLBACK ────────────────────────────────────────────────────────
+const GEMINI_KEY = 'AIzaSyBeQB_w9uA5ItX16s8gnFPLHF9FjPVMUVc'; // ← paste your key here
+
+function _buildGeminiPrompt() {
+  const reportList = REPORTS.map(r => {
+    const d = REPORT_DETAILS[r.id] || {};
+    const qs = (d.questions || []).slice(0, 3).join(' | ');
+    return `ID:${r.id} | "${r.title}" | Area:${r.area} | ${r.subtitle} | Answers: ${qs}`;
+  }).join('\n');
+  return `You are Hexplorer, a helpful assistant for Workstream's marketing analytics directory.
+Your only job is to match user questions to the right report(s) from this list:
+
+${reportList}
+
+Rules:
+- Respond ONLY with valid JSON — no markdown, no explanation outside JSON
+- Format: {"reportIds": ["r01"], "message": "one short sentence explaining why"}
+- reportIds must be real IDs from the list above
+- If nothing matches, use {"reportIds": [], "message": "I couldn't find a match for that. For deeper data questions, try @sanjuagent on Slack."}
+- Max 2 reportIds
+- Keep message under 15 words`;
+}
+
+async function _askGemini(query) {
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: _buildGeminiPrompt() + '\n\nUser question: ' + query }] }],
+        generationConfig: { temperature: 0.1, maxOutputTokens: 200 }
+      })
+    }
+  );
+  if (!res.ok) throw new Error('Gemini API error ' + res.status);
+  const data = await res.json();
+  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+  const clean = raw.replace(/```json|```/g, '').trim();
+  return JSON.parse(clean);
+}
+// ──────────────────────────────────────────────────────────────────────────────
 function _cbRoute(query) {
   const typingRow = _cbTyping();
   setTimeout(() => {
@@ -2852,7 +2895,7 @@ function _cbRoute(query) {
     // 2. Fuzzy fallback — only if no keyword match
     if (!matched.length) {
       // Filter stop words and very short tokens
-      const words = q.split(/\s+/).filter(w => w.length > 3 && !CB_STOP_WORDS.has(w));
+      const words = q.split(/\s+/).filter(w => w.length >= 2 && !CB_STOP_WORDS.has(w));
       if (words.length > 0) {
         const scored = [];
         REPORTS.forEach(r => {
@@ -2869,13 +2912,37 @@ function _cbRoute(query) {
         matched = scored.slice(0, 3);
       }
     }
+    // 3. Gemini AI fallback — only when local search finds nothing
+    if (!matched.length && GEMINI_KEY !== 'YOUR_GEMINI_API_KEY') {
+      _askGemini(query).then(result => {
+        _removeTyping();
+        if (result.reportIds && result.reportIds.length) {
+          const aiMatched = result.reportIds.map(id => REPORTS.find(r => r.id === id)).filter(Boolean);
+          if (aiMatched.length) {
+            cbPendingResults = aiMatched;
+            cbLastIds = aiMatched.map(r => r.id);
+            _logSearch(query, 'chat-ai', aiMatched.map(r => r.id));
+            _cbShowResults(aiMatched, result.message || 'Here\'s what I found:');
+            return;
+          }
+        }
+        _logSearch(query, 'chat', []);
+        _cbBotMsg(result.message || "I couldn\'t find a report for that one. Try @sanjuagent on Slack for deeper questions. 💜", _buildChips(CHIP_SUGGESTIONS));
+      }).catch(() => {
+        _removeTyping();
+        _logSearch(query, 'chat', []);
+        _cbBotMsg("I couldn\'t find a report for that one. Try describing what you\'re measuring, or ping <strong>@sanjuagent</strong> on Slack. 💜", _buildChips(CHIP_SUGGESTIONS));
+      });
+      return; // typing indicator stays while Gemini responds
+    }
+
     cbPendingResults = matched;
     cbLastIds = [];
     // Log the chatbot query + results
     _logSearch(query, 'chat', matched.map(r => r.id));
     if (!matched.length) {
       _cbBotMsg(
-        "I couldn't find a report for that one. Try describing what you're measuring, like <em>\"win rate\"</em>, <em>\"MQL by channel\"</em>, or <em>\"event pipeline\"</em>.<br><br>For deeper data questions, ping <strong>@sanjuagent</strong> on Slack — she can help dig into the numbers! 💜",
+        "I couldn\'t find a report for that one. Try describing what you\'re measuring, like <em>\"win rate\"</em>, <em>\"MQL by channel\"</em>, or <em>\"event pipeline\"</em>.<br><br>For deeper data questions, ping <strong>@sanjuagent</strong> on Slack — she can help dig into the numbers! 💜",
         _buildChips(CHIP_SUGGESTIONS)
       );
       return;
