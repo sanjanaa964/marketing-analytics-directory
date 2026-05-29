@@ -1228,12 +1228,16 @@
     <div class="pw-divider"></div>
 
     <p class="pw-welcome">
-      Enter your email to get in. You'll only need to do this once.
+      Answer the question below to get in.
+    </p>
+
+    <p style="font-size:15px;font-weight:600;color:#1e3a8a;margin-bottom:16px;line-height:1.5;">
+      The San Francisco office's favorite good girl has a product marketer mom. What's her name? 🐶
     </p>
 
     <div class="pw-input-wrap">
-      <input class="pw-input" id="gateInput" type="email"
-        
+      <input class="pw-input" id="gateInput" type="text"
+        placeholder="Type your answer..."
         onkeydown="if(event.key==='Enter') checkGatePassword()">
     </div>
     <div class="pw-error-msg" id="gateError"></div>
@@ -2871,7 +2875,7 @@ const ROUTES = [
   { kw:['email performance','email campaign','email report','hubspot','email attribution','open rate','click rate','ctr','email engagement','contentnl','demopush','email mql','email pipeline','campaign attribution email','email to campaign','fuzzy match','email to revenue','send to revenue','email funnel','lena email','email sheets','email google sheets'], id:'r27' },
   { kw:['youtube','youtube analytics','desmond','subscribers','watch time','average duration','ctr youtube','net subscribers','video performance','youtube kpis','charles youtube','youtube weekly','channel performance youtube'], id:'r28' },
   { kw:['cohort realisation','realization matrix','cohort ramp','new business billing','signed arr','billed mrr','unrealized arr','never billed','cohort activation','nb cohort','revenue leakage','billing ramp','closed won billing','arr realization'], id:'r29' },
-  { kw:['arr pulse','arr forecast','arr projection','mnrr','realization rate','pre-2025 arr','arr walk','arr cohort forecast','scenario arr','24 month arr','billing forecast','arr stacked','new biz arr','digest arr'], id:'r30' },
+  { kw:['arr pulse','arr forecast','arr projection','arr predictions','arr 2026','arr rest of year','mnrr','realization rate','pre-2025 arr','arr walk','arr cohort forecast','scenario arr','24 month arr','billing forecast','arr stacked','new biz arr','digest arr','future arr','arr outlook'], id:'r30' },
   { kw:['calendar booking','chili piper','hubspot booking','direct booking','mql opp cvr','landing page conversion','booking impact','pre post cvr','msa landing page','paid lp conversion','demo conversion','mql conversion rate','calendar switch'], id:'r31' },
   { kw:['mbr','monthly business review','gtm tracking','pipeline won','win rate','win rate by sku','60 day cohort','deal size win rate','mql activation','brand penetration nrr','h1 target pipeline','p90 time to close','gtm digest','mbr review','mql to sql','sql to opp','sql conversion','funnel conversion rate','mql sql opp funnel','stage conversion'], id:'r32' },
   { kw:['gross margin','product gm','cogs','msa gross margin','product pl','hiring margin','hr margin','payroll margin','cost per location','msа revenue','product economics','unit economics','msa cogs','finance gm'], id:'r33' },
@@ -3566,7 +3570,7 @@ function checkGatePassword() {
   const input = document.getElementById('gateInput');
   const errEl = document.getElementById('gateError');
   const val = input.value.trim().toLowerCase();
-  if (val.endsWith('@workstream.is')) {
+  if (val === 'nori') {
     localStorage.setItem(PW_KEY, val);
     const gate = document.getElementById('pwGate');
     gate.classList.add('hidden');
@@ -3579,7 +3583,7 @@ function checkGatePassword() {
   }
 }
 (function() {
-  if (localStorage.getItem(PW_KEY) && localStorage.getItem(PW_KEY).endsWith('@workstream.is')) {
+  if (localStorage.getItem(PW_KEY) === 'nori') {
     const gate = document.getElementById('pwGate');
     if (gate) gate.remove();
     window.addEventListener('load', _openChatbotOnLoad);
