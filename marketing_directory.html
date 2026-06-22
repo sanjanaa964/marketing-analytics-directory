@@ -2764,6 +2764,9 @@ let cbOpen      = false;
 let cbGreeted   = false;
 let cbLastIds   = [];          // track IDs shown so "show me another" works
 let cbPendingResults = [];     // all matches from last query
+/* ── Gemini AI fallback key ── */
+const GEMINI_KEY = ''; // ← paste your Google AI Studio key here
+
 const CHIP_SUGGESTIONS = [
   'ROI by channel',
   'MQL volume this week',
@@ -2891,6 +2894,47 @@ const CB_STOP_WORDS = new Set([
   'tell','find','look','need','help','which','about','would','could','there',
   'their','where','other','than','also','only','after','send','make',
 ]);
+
+/* ── Gemini AI fallback (Tier 3) ──────────────────────────────────────────
+   Called only when local keyword + fuzzy matching both return zero results.
+───────────────────────────────────────────────────────────────────────────── */
+async function _askGemini(query) {
+  if (!GEMINI_KEY) return [];
+  const catalog = REPORTS.map(r =>
+    `ID:${r.id} | Title:${r.title} | Tags:${r.tags.join(',')} | Desc:${r.subtitle}`
+  ).join('\n');
+  const prompt = `You are a search assistant for an internal analytics dashboard called Hexplorer.
+Given a user query, return a JSON object with one key "ids" whose value is an array of matching report IDs.
+Return only IDs that are genuinely relevant — return an empty array if nothing matches.
+Output ONLY raw JSON, no markdown, no explanation.
+
+CATALOG:
+${catalog}
+
+User query: ${query}`;
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { responseMimeType: 'application/json', maxOutputTokens: 256 }
+      })
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    const parsed = JSON.parse(text);
+    const ids = Array.isArray(parsed.ids) ? parsed.ids : [];
+    return ids.map(id => REPORTS.find(r => r.id === id)).filter(Boolean);
+  } catch (e) {
+    console.warn('Gemini fallback error:', e);
+    return [];
+  }
+}
+
 function _cbRoute(query) {
   const typingRow = _cbTyping();
   setTimeout(() => {
@@ -2931,8 +2975,7 @@ function _cbRoute(query) {
             if (titleLow.includes(w))    score += 3;  // title match = high signal
             else if (haystack.includes(w)) score += 1;
           }
-          if (score >= 3) scored.push({ ...r, _score: score }); // minimum threshold — require at least 1 title match or 3 tag 
-matches
+          if (score >= 3) scored.push({ ...r, _score: score }); // minimum threshold — require at least 1 title match or 3 tag matches
         });
         scored.sort((a, b) => b._score - a._score);
         matched = scored.slice(0, 3);
@@ -2943,10 +2986,34 @@ matches
     // Log the chatbot query + results
     _logSearch(query, 'chat', matched.map(r => r.id));
     if (!matched.length) {
-      _cbBotMsg(
-        "I couldn't find a report for that one. Try describing what you're measuring, like <em>\"win rate\"</em>, <em>\"MQL by channel\"</em>, or <em>\"event pipeline\"</em>.<br><br>For deeper data questions, ping <strong>@sanjuagent</strong> on Slack — she can help dig into the numbers! 💜",
-        _buildChips(CHIP_SUGGESTIONS)
-      );
+      // Tier 3: Gemini AI fallback when local matching finds nothing
+      if (GEMINI_KEY) {
+        _askGemini(query).then(aiMatched => {
+          if (aiMatched.length) {
+            cbPendingResults = aiMatched;
+            cbLastIds = [];
+            _logSearch(query, 'chat:ai', aiMatched.map(r => r.id));
+            if (aiMatched.length === 1) {
+              cbLastIds.push(aiMatched[0].id);
+              _cbShowResults(aiMatched, 'Here\'s what I found:');
+            } else {
+              const toShow = aiMatched.slice(0, 2);
+              cbLastIds.push(...toShow.map(r => r.id));
+              _cbShowResults(toShow, `I found ${aiMatched.length} reports that might help:`);
+            }
+          } else {
+            _cbBotMsg(
+              "I couldn't find a report for that one. Try describing what you're measuring, like <em>\"win rate\"</em>, <em>\"MQL by channel\"</em>, or <em>\"event pipeline\"</em>.<br><br>For deeper data questions, ping <strong>@sanjuagent</strong> on Slack — she can help dig into the numbers! 💜",
+              _buildChips(CHIP_SUGGESTIONS)
+            );
+          }
+        });
+      } else {
+        _cbBotMsg(
+          "I couldn't find a report for that one. Try describing what you're measuring, like <em>\"win rate\"</em>, <em>\"MQL by channel\"</em>, or <em>\"event pipeline\"</em>.<br><br>For deeper data questions, ping <strong>@sanjuagent</strong> on Slack — she can help dig into the numbers! 💜",
+          _buildChips(CHIP_SUGGESTIONS)
+        );
+      }
       return;
     }
     if (matched.length === 1) {
