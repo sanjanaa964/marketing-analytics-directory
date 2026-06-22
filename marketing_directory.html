@@ -1103,6 +1103,18 @@
     .am-img-remove:hover { background: rgba(220,38,38,0.85); }
 
     /* ── Search Analytics admin panel ─────────────────────────── */
+    .sa-period-row {
+      display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; align-items: center;
+    }
+    .sa-period-lbl { font-size: 11px; font-weight: 700; color: #9CA3AF;
+                     text-transform: uppercase; letter-spacing: .07em; margin-right: 4px; }
+    .sa-period-btn {
+      padding: 5px 13px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      border: 1.5px solid #E5E7EB; background: white; color: #6B7280;
+      cursor: pointer; font-family: inherit; transition: all .12s;
+    }
+    .sa-period-btn:hover { background: #F3F4F6; border-color: #D1D5DB; }
+    .sa-period-btn.active { background: #2563EB; color: white; border-color: #2563EB; }
     .sa-summary {
       display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap;
     }
@@ -1114,6 +1126,7 @@
     .sa-stat-lbl { font-size: 11px; color: #9CA3AF; font-weight: 600;
                    text-transform: uppercase; letter-spacing: 0.07em; margin-top: 3px; }
     .sa-stat.warn .sa-stat-num { color: #DC2626; }
+    .sa-stat.good .sa-stat-num { color: #16A34A; }
     .sa-tabs {
       display: flex; gap: 4px; margin-bottom: 14px;
       border-bottom: 2px solid #F3F4F6; padding-bottom: 0;
@@ -2738,16 +2751,45 @@ renderAll();
 // ═══════════════════════════════════════════════════════════════════════════
 const SEARCH_LOG_KEY = 'ws_search_log_v1';
 const SEARCH_LOG_MAX = 600; // rolling cap
+
+/* ── Cross-user analytics endpoint (Google Apps Script web app URL) ──────────
+   Leave empty to use local-only mode.
+   To enable cross-user stats, follow setup at:
+     https://docs.google.com/spreadsheets/d/1p0fvyCghF90YByWD8sbLfxh6CbymZCOnwRMccjSc0oY
+   Then paste your /exec URL below.
+─────────────────────────────────────────────────────────────────────────────── */
+const ANALYTICS_ENDPOINT = ''; // ← paste Apps Script /exec URL here
+
+/* Anonymous session ID — one per browser, persists across page loads */
+function _getSessionId() {
+  const KEY = 'ws_session_id';
+  let sid = localStorage.getItem(KEY);
+  if (!sid) {
+    sid = 'sid_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now().toString(36);
+    localStorage.setItem(KEY, sid);
+  }
+  return sid;
+}
+
 function _logSearch(query, source, hitIds) {
   const q = (query || '').trim().toLowerCase();
   if (!q || q.length < 2) return;
+  const entry = { ts: Date.now(), q, src: source, hits: hitIds || [], sid: _getSessionId() };
   try {
     const log = _getSearchLog();
-    log.push({ ts: Date.now(), q, src: source, hits: hitIds || [] });
-    // rolling window — drop oldest if over cap
+    log.push(entry);
     const trimmed = log.length > SEARCH_LOG_MAX ? log.slice(log.length - SEARCH_LOG_MAX) : log;
     localStorage.setItem(SEARCH_LOG_KEY, JSON.stringify(trimmed));
   } catch(e) { /* ignore storage errors */ }
+  // Cross-user logging — fire-and-forget POST to Apps Script endpoint
+  if (ANALYTICS_ENDPOINT) {
+    fetch(ANALYTICS_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry),
+      mode: 'no-cors'
+    }).catch(() => {});
+  }
 }
 function _getSearchLog() {
   try { return JSON.parse(localStorage.getItem(SEARCH_LOG_KEY)) || []; } catch { return []; }
@@ -3356,44 +3398,56 @@ function _buildActivityCharts(searchLog) {
   );
 }
 function renderSearchAnalytics() {
-  const log = _getSearchLog();
-  // Aggregate by query
+  const fullLog = _getSearchLog();
+  // ── Period filter ──────────────────────────────────────────────────
+  const period = window._saPeriod || 'all';
+  const now    = Date.now();
+  const cutoffs = { '1w': 7, '2w': 14, '8w': 56, 'all': Infinity };
+  const days   = cutoffs[period] || Infinity;
+  const log    = days === Infinity ? fullLog
+                                   : fullLog.filter(e => (now - e.ts) <= days * 86400000);
+  // ── Aggregate by query ─────────────────────────────────────────────
   const byQuery = {};
   log.forEach(entry => {
     const key = entry.q;
-    if (!byQuery[key]) byQuery[key] = { q: key, count: 0, sources: new Set(), hits: [], lastTs: 0 };
+    if (!byQuery[key]) byQuery[key] = { q: key, count: 0, sources: new Set(), hits: [], lastTs: 0, sessions: new Set() };
     byQuery[key].count++;
     byQuery[key].sources.add(entry.src);
-    if (entry.hits.length) byQuery[key].hits = entry.hits; // keep latest hit list
+    if (entry.hits && entry.hits.length) byQuery[key].hits = entry.hits;
     if (entry.ts > byQuery[key].lastTs) byQuery[key].lastTs = entry.ts;
+    if (entry.sid) byQuery[key].sessions.add(entry.sid);
   });
-  const rows = Object.values(byQuery).sort((a, b) => b.count - a.count);
+  const rows         = Object.values(byQuery).sort((a, b) => b.count - a.count);
   const totalSearches = log.length;
   const uniqueQueries = rows.length;
+  const matchedRows   = rows.filter(r => r.hits.length > 0);
   const noMatchRows   = rows.filter(r => !r.hits.length);
-  const noMatchRate   = totalSearches ? Math.round(noMatchRows.length / uniqueQueries * 100) : 0;
-  // Tab state (persist on window)
+  const matchRate     = uniqueQueries ? Math.round(matchedRows.length / uniqueQueries * 100) : 0;
+  const noMatchRate   = uniqueQueries ? 100 - matchRate : 0;
+  const uniqueSessions = new Set(log.map(e => e.sid).filter(Boolean)).size;
+  // ── Tab filter ────────────────────────────────────────────────────
   const tab = window._saTab || 'all';
   function filtered(t) {
     if (t === 'nomatch') return noMatchRows;
-    if (t === 'chat')   return rows.filter(r => r.sources.has('chat'));
-    if (t === 'search') return rows.filter(r => r.sources.has('search'));
+    if (t === 'chat')    return rows.filter(r => r.sources.has('chat') || r.sources.has('chat:ai'));
+    if (t === 'search')  return rows.filter(r => r.sources.has('search'));
     return rows;
   }
+  function periodBtn(p, label) {
+    return `<button class="sa-period-btn ${period===p?'active':''}" onclick="window._saPeriod='${p}';renderSearchAnalytics()">${label}</button>`;
+  }
   function tabBtn(t, label, count) {
-    return `<button class="sa-tab ${tab===t?'active':''}" onclick="window._saTab='${t}';renderSearchAnalytics()">${label} <span 
-style="opacity:.6">(${count})</span></button>`;
+    return `<button class="sa-tab ${tab===t?'active':''}" onclick="window._saTab='${t}';renderSearchAnalytics()">${label} <span style="opacity:.6">(${count})</span></button>`;
   }
   function rowsHTML(data) {
     if (!data.length) return `<tr><td colspan="5" class="sa-empty">No searches yet${tab!=='all'?' in this filter':''} 🔍</td></tr>`;
     return data.map(r => {
-      const noMatch = !r.hits.length;
+      const noMatch   = !r.hits.length;
       const srcBadges = [...r.sources].map(s =>
-        s === 'chat'
+        (s === 'chat' || s === 'chat:ai')
           ? '<span class="sa-badge-chat">💬 Chat</span>'
           : '<span class="sa-badge-search">🔎 Search</span>'
       ).join(' ');
-      const freqCls = r.count >= 5 ? 'high' : '';
       const resultCell = noMatch
         ? '<span class="sa-no-match-pill">⚠ No match</span>'
         : r.hits.slice(0,2).map(id => {
@@ -3404,7 +3458,7 @@ style="opacity:.6">(${count})</span></button>`;
       return `<tr class="${noMatch ? 'sa-row-nomatch' : ''}">
         <td style="font-weight:600;color:#111827">${r.q}</td>
         <td>${srcBadges}</td>
-        <td><span class="sa-freq ${freqCls}">${r.count}</span></td>
+        <td><span class="sa-freq ${r.count >= 5 ? 'high' : ''}">${r.count}</span></td>
         <td>${resultCell}</td>
         <td style="color:#9CA3AF;font-size:12px;white-space:nowrap">${ago}</td>
       </tr>`;
@@ -3413,25 +3467,40 @@ style="opacity:.6">(${count})</span></button>`;
   function _timeAgo(ts) {
     if (!ts) return '—';
     const diff = Date.now() - ts;
-    if (diff < 60000)   return 'just now';
-    if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
+    if (diff < 60000)    return 'just now';
+    if (diff < 3600000)  return Math.floor(diff/60000) + 'm ago';
     if (diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
     return Math.floor(diff/86400000) + 'd ago';
   }
   const visibleRows = filtered(tab);
+  const periodLabel = { all: 'all-time', '8w': 'last 8 weeks', '2w': 'last 2 weeks', '1w': 'last week' }[period];
+  const endpointSet = typeof ANALYTICS_ENDPOINT !== 'undefined' && ANALYTICS_ENDPOINT;
   document.getElementById('adminRoot').innerHTML = `
     <div class="admin-panel">
       <div class="admin-panel-header">
         <div>
           <div class="admin-panel-title">📊 Search Insights</div>
-          <div style="font-size:12px;color:#9CA3AF;margin-top:3px">What people are searching for — logged automatically from the 
-chatbot and search bar</div>
+          <div style="font-size:12px;color:#9CA3AF;margin-top:3px">
+            ${endpointSet
+              ? '🌐 Cross-user mode — logging to Google Sheets'
+              : '⚠️ Local mode — showing <strong>your browser only</strong>. <a href="https://docs.google.com/spreadsheets/d/1p0fvyCghF90YByWD8sbLfxh6CbymZCOnwRMccjSc0oY" target="_blank" style="color:#2563EB">Set up cross-user tracking →</a>'}
+          </div>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
           <button class="admin-add-btn" onclick="renderAdminTable()">← Back to Reports</button>
           <button class="sa-clear-btn" onclick="clearSearchLog()">Clear log</button>
         </div>
       </div>
+
+      <div class="sa-period-row">
+        <span class="sa-period-lbl">Period:</span>
+        ${periodBtn('all', 'All time')}
+        ${periodBtn('8w',  'Last 8 weeks')}
+        ${periodBtn('2w',  'Last 2 weeks')}
+        ${periodBtn('1w',  'Last week')}
+        <span style="font-size:11px;color:#9CA3AF;margin-left:4px">${totalSearches} searches ${periodLabel}</span>
+      </div>
+
       <div class="sa-summary">
         <div class="sa-stat">
           <div class="sa-stat-num">${totalSearches}</div>
@@ -3441,49 +3510,50 @@ chatbot and search bar</div>
           <div class="sa-stat-num">${uniqueQueries}</div>
           <div class="sa-stat-lbl">Unique queries</div>
         </div>
-        <div class="sa-stat ${noMatchRows.length ? 'warn' : ''}">
-          <div class="sa-stat-num">${noMatchRows.length}</div>
-          <div class="sa-stat-lbl">No-match queries</div>
+        <div class="sa-stat good">
+          <div class="sa-stat-num">${matchedRows.length}</div>
+          <div class="sa-stat-lbl">Queries matched ✓</div>
         </div>
-        <div class="sa-stat">
+        <div class="sa-stat ${noMatchRows.length ? 'warn' : ''}">
           <div class="sa-stat-num">${noMatchRate}%</div>
           <div class="sa-stat-lbl">No-match rate</div>
         </div>
+        <div class="sa-stat">
+          <div class="sa-stat-num">${uniqueSessions || '—'}</div>
+          <div class="sa-stat-lbl">Unique sessions</div>
+        </div>
       </div>
+
       ${_buildActivityCharts(log)}
+
       ${noMatchRows.filter(r => r.count >= 2).length ? `
       <div style="background:#FFF7F7;border:1.5px solid #FCA5A5;border-radius:10px;padding:12px 16px;margin-bottom:16px">
-        <div style="font-size:12px;font-weight:700;color:#B91C1C;margin-bottom:6px">⚠️ Needs attention — searched 2+ times with no 
-match:</div>
+        <div style="font-size:12px;font-weight:700;color:#B91C1C;margin-bottom:6px">⚠️ Searched 2+ times with no match — consider adding these:</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px">
           ${noMatchRows.filter(r => r.count >= 2).map(r =>
-            `<span style="background:#FEE2E2;color:#B91C1C;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600">${r.q} 
-<span style="opacity:.7">(×${r.count})</span></span>`
+            `<span style="background:#FEE2E2;color:#B91C1C;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600">${r.q} <span style="opacity:.7">(×${r.count})</span></span>`
           ).join('')}
         </div>
       </div>` : ''}
+
       <div class="sa-tabs">
-        ${tabBtn('all',    'All',       rows.length)}
-        ${tabBtn('nomatch','No match',  noMatchRows.length)}
-        ${tabBtn('chat',   'Chatbot',   rows.filter(r=>r.sources.has('chat')).length)}
-        ${tabBtn('search', 'Search bar',rows.filter(r=>r.sources.has('search')).length)}
+        ${tabBtn('all',     'All',        rows.length)}
+        ${tabBtn('nomatch', 'No match',   noMatchRows.length)}
+        ${tabBtn('chat',    'Chatbot',    rows.filter(r=>r.sources.has('chat')||r.sources.has('chat:ai')).length)}
+        ${tabBtn('search',  'Search bar', rows.filter(r=>r.sources.has('search')).length)}
       </div>
       <table class="sa-table">
         <thead>
           <tr>
-            <th>Query</th>
-            <th>Source</th>
-            <th>Times</th>
-            <th>Top result</th>
-            <th>Last seen</th>
+            <th>Query</th><th>Source</th><th>Times</th><th>Top result</th><th>Last seen</th>
           </tr>
         </thead>
         <tbody>${rowsHTML(visibleRows)}</tbody>
       </table>
-      ${!totalSearches ? `<p style="font-size:12px;color:#9CA3AF;margin-top:12px">Searches will appear here automatically as people 
-use the chatbot and search bar.</p>` : ''}
+      ${!totalSearches ? `<p style="font-size:12px;color:#9CA3AF;margin-top:12px">Searches will appear here automatically as people use the chatbot and search bar.</p>` : ''}
     </div>`;
 }
+
 /* ── Add / Edit modal ── */
 function openAddModal() {
   _editingId = null;
